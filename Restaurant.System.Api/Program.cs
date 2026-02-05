@@ -76,7 +76,7 @@ builder.Services.AddCors(options =>
 
     options.AddPolicy("ProductionPolicy", policy =>
     {
-        policy.WithOrigins("https://leezx24.github.io/Restaurant.System/")
+        policy.WithOrigins("https://leezx24.github.io")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -137,37 +137,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddDataDependencies();
 builder.Services.AddServiceDependencies();
 
-if (builder.Environment.IsDevelopment())
-{
-    builder.Services.AddDataProtection()
+builder.Services.AddDataProtection()
         .PersistKeysToFileSystem(
             new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "DataProtection-Keys")))
         .SetApplicationName("Restaurant.System");
-}
-
-if (!builder.Environment.IsDevelopment())
-{
-    var keysFolder = "/var/app/DataProtection-Keys";
-    Directory.CreateDirectory(keysFolder);
-
-    var dpBuilder = builder.Services.AddDataProtection()
-        .PersistKeysToFileSystem(new DirectoryInfo(keysFolder))
-        .SetApplicationName("Restaurant.System");
-
-    var pfxPath = Path.Combine(builder.Environment.ContentRootPath, "cert.pfx");
-    var pfxPassword = Environment.GetEnvironmentVariable("DATA_PROTECTION_PFX_PASSWORD");
-
-    if (File.Exists(pfxPath) && !string.IsNullOrEmpty(pfxPassword))
-    {
-        var pfxBytes = File.ReadAllBytes(pfxPath);
-        var certificate = X509CertificateLoader.LoadPkcs12(
-            pfxBytes,
-            pfxPassword,
-            X509KeyStorageFlags.PersistKeySet);
-
-        dpBuilder.ProtectKeysWithCertificate(certificate);
-    }
-}
 
 var app = builder.Build();
 
@@ -200,22 +173,6 @@ app.MapHealthChecks("/api/ishealthy", new HealthCheckOptions
 
 app.UseRouting();
 app.UseCors(app.Environment.IsDevelopment() ? "DevelopmentPolicy" : "ProductionPolicy");
-
-app.Use(async (ctx, next) =>
-{
-    if (ctx.Request.Method == "OPTIONS")
-    {
-        ctx.Response.Headers["Access-Control-Allow-Origin"] = ctx.Request.Headers["Origin"];
-        ctx.Response.Headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS";
-        ctx.Response.Headers["Access-Control-Allow-Headers"] =
-            ctx.Request.Headers["Access-Control-Request-Headers"];
-
-        ctx.Response.StatusCode = 200;
-        return;
-    }
-
-    await next();
-});
 
 app.UseAuthentication();
 app.UseAuthorization();
