@@ -9,6 +9,6 @@ namespace Restaurant.System.Models.Entities
         public required string MenuCode { get; set; }
         public required string MenuName { get; set; }
         public MenuDays MenuDays { get; set; } = MenuDays.AllDays;
-        public DateTime CreatedDate { get; set; } = DateTime.Now;   
-    } 
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+    }
 }

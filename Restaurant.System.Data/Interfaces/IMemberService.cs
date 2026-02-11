@@ -7,5 +7,7 @@ namespace Restaurant.System.Data.Interfaces
         Task<List<Member>> GetMemberList();
         Task<Member> GetMemberDetail(string MemberId);
         Task<Member> GetMemberByCustomer(string CustomerId);
+        Task<Member> GetMemberByEmail(string Email);
+        Task AddNewMember(Member newMember);
     }
 }

@@ -25,4 +25,24 @@ namespace Restaurant.System.Models.Enums
         Sunday,
         AllDays,
     }
+
+    public enum UserType
+    {
+        Member,
+        Staff
+    }
+
+    public enum OrderType
+    {
+        Delivery,
+        Table,
+        Takeaway
+    }
+
+    public enum Status
+    {
+        Pending = 0,
+        Success = 1,
+        Error = 2
+    }
 }

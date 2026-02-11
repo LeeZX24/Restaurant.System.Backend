@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.System.Models.Dtos;
 using Restaurant.System.Models.Dtos.Shared;
 using Restaurant.System.Services.Interfaces;
 
@@ -19,22 +18,42 @@ namespace Restaurant.System.Controllers.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login([FromBody] UserDto loginDto)
+        public async Task<ActionResult<UserDto>> Login([FromBody] UserDto loginDetails)
         {
-            var user = await _authService.LoginAsync(loginDto);
-            if (user == null)
-            return NotFound();
-            
+            try
+            {
+                var response = await _authService.LoginAsync(loginDetails);
+                return Ok(response);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Message = "Internal server error" }); // 500
+            }
 
-            return Ok(user);
         }
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Register([FromBody] CustomerDto customer)
+        public async Task<ActionResult<UserDto>> Register([FromBody] UserDto registerDetails)
         {
-            var user = await _authService.RegisterAsync(customer);
-            return Ok(user);
+            try
+            {
+                var user = await _authService.RegisterAsync(registerDetails);
+                return Ok(user);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Message = "Internal server error" }); // 500
+            }
+
         }
     }
 }

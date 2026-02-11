@@ -7,6 +7,6 @@ namespace Restaurant.System.Models.Entities
         public List<Order> OrderHistory { get; set; } = new List<Order>(); // Foreign Key
         public required string CustomerId { get; set; }
         public bool IsAnonymous { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

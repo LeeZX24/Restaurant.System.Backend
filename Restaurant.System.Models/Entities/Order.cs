@@ -9,11 +9,14 @@ namespace Restaurant.System.Models.Entities
         public Customer Customer { get; set; } // Foreign Key
         public Staff Staff { get; set; } // Foreign Key
         public Payment Payment { get; set; } // Foreign Key
-        public string OrderNumber { get; set; }
-        public string CustomerId { get; set; }
+        public Address DeliveryAddress { get; set; } //Foreign key
+        public required string OrderNumber { get; set; }
+        public required string CustomerId { get; set; }
+        public required OrderType OrderType { get; set; }
         public string StaffUserName { get; set; }
-        public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
-        public decimal TotalOrderAmount { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public required OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+        public required decimal TotalOrderAmount { get; set; }
+        public required string AddressGuid { get; set; }
+        public required DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }

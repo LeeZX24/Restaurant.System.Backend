@@ -8,9 +8,9 @@ namespace Restaurant.System.Models.Dtos.Shared
         public string State { get; set; }
         public string Country { get; set; }
 
-        // public string ToAddressString(this AddressDto address)
+        // public static string ToAddressString(this AddressDto address)
         // {
-        //     return $"{String.Concat(Address1 ," ", Address2, " ", PostalCode, " ", State, " ", Country)}";
+        //     return $"{String.Concat(address.Address1 ," ", address.Address2, " ", address.PostalCode, " ", State, " ", address.Country)}";
         // }
     }
 }

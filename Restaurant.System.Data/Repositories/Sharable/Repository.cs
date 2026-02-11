@@ -8,34 +8,34 @@ namespace Restaurant.System.Data.Repositories
         #region Private Class & Constructor
         private readonly AppDbContext _context;
         private readonly DbSet<T> _dbSet;
-        
+
         public Repository(AppDbContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();
         }
         #endregion
-        
+
         #region Get Methods
         public async Task<T> GetAsync(int id) => await _dbSet.FindAsync(id);
 
-        public async Task<List<T>> GetByFieldAsync(Expression<Func<T, bool>> expression) 
+        public async Task<List<T>> GetByFieldAsync(Expression<Func<T, bool>> expression)
         => await _dbSet.Where(expression).ToListAsync();
 
         public async Task<List<T>> GetAllAsync() => await _dbSet.ToListAsync();
         #endregion
-        
+
         #region Select Methods
         public async Task<List<T>> SelectAsync(Expression<Func<T, bool>> expression) => await _dbSet.Where(expression).ToListAsync();
 
         public async Task<List<TResult>> SelectAsync<TResult>(
-            Expression<Func<T, bool>> where, 
+            Expression<Func<T, bool>> where,
             Expression<Func<T, TResult>> select)
         {
             return await _dbSet
             .Where(where)
             .Select(select)
-            .ToListAsync();   
+            .ToListAsync();
         }
         #endregion
 
@@ -51,6 +51,11 @@ namespace Restaurant.System.Data.Repositories
         {
             _dbSet.Update(entity);
         }
+
+        public async Task UpdateByFieldAsync<TProperty>(Expression<Func<T, bool>> filter, Expression<Func<T, TProperty>> property, Expression<Func<T, TProperty>> value)
+        {
+            await _dbSet.Where(filter).ExecuteUpdateAsync(s => s.SetProperty(property, value));
+        }
         #endregion
 
         #region Delete Methods
@@ -62,14 +67,14 @@ namespace Restaurant.System.Data.Repositories
         public async Task DeleteAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
-            
-            if(entity != null)
+
+            if (entity != null)
             {
                 _dbSet.Remove(entity);
             }
         }
         #endregion
-        
+
         #region Other Methods
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
 
@@ -79,12 +84,12 @@ namespace Restaurant.System.Data.Repositories
         }
         #endregion
 
-        
 
-        
 
-        
 
-        
+
+
+
+
     }
 }

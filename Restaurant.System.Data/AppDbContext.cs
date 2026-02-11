@@ -8,7 +8,7 @@ namespace Restaurant.System.Data
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
-            
+
         }
 
         //User
@@ -16,6 +16,7 @@ namespace Restaurant.System.Data
         public DbSet<Member> Members => Set<Member>();
         public DbSet<Staff> Staffs => Set<Staff>();
         public DbSet<Role> Roles => Set<Role>();
+        public DbSet<User> Users => Set<User>();
 
         // Menu
         public DbSet<Menu> Menus => Set<Menu>();
@@ -25,7 +26,8 @@ namespace Restaurant.System.Data
         //Order
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
-        
+        public DbSet<Address> Addresses => Set<Address>();
+
         //Payment
         public DbSet<Payment> Payments => Set<Payment>();
 
@@ -35,14 +37,14 @@ namespace Restaurant.System.Data
 
             builder.Entity<Customer>().HasKey(c => c.CustomerId);
             builder.Entity<Member>().HasKey(m => m.CustomerId);
-            
+
             builder.Entity<Customer>()
                 .HasOne(c => c.MemberDetails)
                 .WithOne(m => m.Customer)
                 .HasForeignKey<Member>(m => m.CustomerId)
                 .HasPrincipalKey<Customer>(c => c.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);  // <--- IMPORTANT
-                 
+
             builder.Entity<Staff>()
                 .HasMany(s => s.Roles)
                 .WithMany(r => r.Staffs)

@@ -11,6 +11,7 @@ namespace Restaurant.System.Data
         Task<List<TResult>> SelectAsync<TResult>(Expression<Func<T, bool>> where, Expression<Func<T, TResult>> select);
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
+        Task UpdateByFieldAsync<TProperty>(Expression<Func<T, bool>> filter, Expression<Func<T, TProperty>> property, Expression<Func<T, TProperty>> value);
         Task DeleteAsync(int id);
         Task DeleteByFieldAsync(Expression<Func<T, bool>> expression);
         Task SaveChangesAsync();

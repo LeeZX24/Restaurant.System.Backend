@@ -9,5 +9,7 @@ namespace Restaurant.System.Data.Interfaces
         Task<Customer> GetLatestCustomer();
 
         Task<Customer> GetCurrentCustomer(string CustomerId);
+
+        Task AddNewCustomer(Customer newCustomer);
     }
 }

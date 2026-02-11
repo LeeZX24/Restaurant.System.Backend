@@ -9,6 +9,6 @@ namespace Restaurant.System.Models.Entities
         public string MenuItemCode { get; set; }
         public int Quantity { get; set; }
         public decimal OrderPrice { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;   
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }

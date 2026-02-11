@@ -29,5 +29,11 @@ namespace Restaurant.System.Data.Repositories
             var customer = (await _customerRepository.GetByFieldAsync(e => e.CustomerId == customerId)).FirstOrDefault();
             return customer;
         }
+
+        public async Task AddNewCustomer(Customer newCustomer)
+        {
+            await _customerRepository.AddAsync(newCustomer);
+            await _customerRepository.SaveChangesAsync();
+        }
     }
 }

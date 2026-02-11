@@ -89,6 +89,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new Exception("JWT key missing"));
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -103,8 +106,8 @@ options.TokenValidationParameters = new TokenValidationParameters
     ValidateIssuerSigningKey = true,
     ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
     ValidAudience = builder.Configuration["JwtSettings:Audience"],
-    IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+    IssuerSigningKey = new SymmetricSecurityKey(key),
+    ClockSkew = TimeSpan.Zero
 });
 
 // .AddGoogle(options =>

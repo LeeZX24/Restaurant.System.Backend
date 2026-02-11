@@ -8,6 +8,6 @@ namespace Restaurant.System.Models.Entities
         public required string MenuItemName { get; set; }
         public required string MenuItemDescription { get; set; }
         public decimal MenuItemPrice { get; set; }
-        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     }
 }

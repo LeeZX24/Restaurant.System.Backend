@@ -9,7 +9,7 @@ namespace Restaurant.System.Data.Extensions
     {
         extension(IServiceCollection services)
         {
-            
+
         }
 
         public static IServiceCollection AddDataDependencies(this IServiceCollection services)
@@ -19,14 +19,14 @@ namespace Restaurant.System.Data.Extensions
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IStaffService, StaffService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberService, MemberService>();
-            services.AddScoped<IMemberService, MemberService>();
-            
+
 
             return services;
         }
