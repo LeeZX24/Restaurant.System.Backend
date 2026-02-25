@@ -40,11 +40,11 @@ namespace Restaurant.System.Data
             base.OnModelCreating(builder);
 
             #region Member
-            builder.Entity<Member>()
-                .HasOne(m => m.Customer)
-                .WithOne(c => c.MemberDetails)
-                .HasForeignKey<Customer>(c => c.CustomerId)
-                .HasPrincipalKey<Member>(m => m.CustomerId)
+            builder.Entity<Customer>()
+                .HasOne(c => c.MemberDetails)
+                .WithOne(m => m.Customer)
+                .HasForeignKey<Member>(m => m.CustomerId)
+                .HasPrincipalKey<Customer>(c => c.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Member>()
