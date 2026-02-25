@@ -3,7 +3,17 @@ namespace Restaurant.System.Models.Enums
     public enum OrderStatus
     {
         Pending,
+        Ongoing,
         Completed,
+        Cancelled
+    }
+    
+    public enum OrderItemStatus
+    {
+        Draft,
+        Preparing,
+        Ready,
+        Served,
         Cancelled
     }
 

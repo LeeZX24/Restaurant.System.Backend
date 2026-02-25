@@ -78,20 +78,20 @@ namespace Restaurant.System.Services.Services
           throw new UnauthorizedAccessException("Invalid Username or Password.");
         }
 
-        var role = staff.Roles.FirstOrDefault();
+        var role = staff.StaffRolesList.FirstOrDefault().Role;
 
-        var userSession = await _userService.GetUserSession(staff.Id.ToString());
+        var userSession = await _userService.GetUserSession(staff.StaffId);
         if (userSession == null)
         {
-          await _userService.AddUserSession(staff.Id.ToString(), UserType.Staff);
+          await _userService.AddUserSession(staff.StaffId, UserType.Staff);
         }
         else
         {
-          await _userService.UpdateUserLogin(staff.Id.ToString());
+          await _userService.UpdateUserLogin(staff.StaffId);
         }
 
-        login.UserType = UserType.Member;
-        login.Token = GenerateJwtToken(staff.Id.ToString(), staff.UserName, role.RoleCode, role.RoleName);
+        login.UserType = UserType.Staff;
+        login.Token = GenerateJwtToken(staff.StaffId, staff.Username, role.RoleCode, role.RoleName);
         login.ExpireAt = DateTime.UtcNow.AddHours(1);
         login.Status = Status.Success;
         login.ResponseDetails = new ResponseDto
@@ -110,10 +110,7 @@ namespace Restaurant.System.Services.Services
       else
       {
         var customer = await _customerService.GetCurrentCustomer(register.CustomerId);
-        if (customer != null)
-        {
-          customer.IsAnonymous = false;
-        }
+        if (customer != null) customer.IsAnonymous = false;
         else
         {
           //Registering
@@ -128,7 +125,7 @@ namespace Restaurant.System.Services.Services
 
         member = new Member
         {
-          MemberId = new Guid().ToString(),
+          MemberId = Guid.CreateVersion7(),
           CustomerId = register.CustomerId,
           Email = register.IsEmail ? register.Identifier : string.Empty,
           Username = register.IsEmail ? string.Empty : register.Identifier,
@@ -138,53 +135,17 @@ namespace Restaurant.System.Services.Services
         await _memberService.AddNewMember(member);
       }
       register.Status = Status.Success;
+      register.Token = GenerateJwtToken(member.MemberId, member.Email, UserType.Member.ToString(), "Member");
+      register.ExpireAt = DateTime.UtcNow.AddHours(1);
       register.ResponseDetails = new ResponseDto
       {
         Message = "Member Registration Success."
       };
 
       return register;
-
-
-      // var cust = await _customerService.GetCurrentCustomer(customer.CurrentCustomerNumber);
-      // if (!cust.IsAnonymous) return null;
-
-      // var member = await _memberService.GetMemberByCustomer(cust.CustomerId);
-      // if (member != null) return null;
-
-      // string Password = BCrypt.Net.BCrypt.HashPassword(member.Password);
-
-      // var newMember = new Member
-      // {
-      //   Email = customer.Email,
-      //   Username = customer.UserName,
-      //   Password = Password,
-      //   MemberId = "1",
-      //   Customer = new Customer { CustomerId = customer.CurrentCustomerNumber, IsAnonymous = false, CreatedAt = DateTime.UtcNow },
-      //   CustomerId = customer.CurrentCustomerNumber,
-      //   FirstName = customer.FirstName,
-      //   LastName = customer.LastName,
-      //   DateOfBirth = customer.DateOfBirth,
-      //   LoginDateTime = DateTime.UtcNow,
-      //   LogoutDateTime = DateTime.UtcNow,
-      // };
-
-      // await _memberRepository.AddAsync(newMember);
-
-      // await _memberRepository.SaveChangesAsync();
-
-      // var userDto = new UserDto
-      // {
-      //   Email = customer.Email,
-      //   UserName = customer.UserName,
-      //   Password = Password,
-      //   Token = GenerateJwtToken(member.MemberId.ToString(), member.Email, "User", "Customer")
-      // };
-
-      // return userDto;
     }
 
-    private string GenerateJwtToken(string userId, string userName, string role, string userType)
+    private string GenerateJwtToken(Guid userId, string userName, string role, string userType)
     {
       var keyString = _configuration["JwtSettings:Key"]
       ?? throw new InvalidOperationException("JWT Key is missing from configuration.");
@@ -200,7 +161,7 @@ namespace Restaurant.System.Services.Services
 
       var claims = new List<Claim>
       {
-        new(JwtRegisteredClaimNames.Sub, userId), // Standard ID claim
+        new(JwtRegisteredClaimNames.Sub, userId.ToString()), // Standard ID claim
         new(JwtRegisteredClaimNames.UniqueName, userName), // Standard Name claim
         new(ClaimTypes.Role, role),             // Standard Role claim
         new("UserType", userType),            // Custom claim (Staff vs Customer)

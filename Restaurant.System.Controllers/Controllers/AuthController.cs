@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.System.Models.Dtos.Shared;
 using Restaurant.System.Services.Interfaces;
+using Restaurant.System.Models.Enums;
 
 namespace Restaurant.System.Controllers.Controllers
 {
@@ -42,8 +43,11 @@ namespace Restaurant.System.Controllers.Controllers
         {
             try
             {
-                var user = await _authService.RegisterAsync(registerDetails);
-                return Ok(user);
+                var res = await _authService.RegisterAsync(registerDetails);
+                
+                if(res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
+                
+                return Ok(res);
             }
             catch (UnauthorizedAccessException ex)
             {

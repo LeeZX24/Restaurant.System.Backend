@@ -14,9 +14,9 @@ namespace Restaurant.System.Data.Repositories
 
         public async Task<List<Staff>> GetStaffList() => await _staffRepository.GetAllAsync();
 
-        public async Task<Staff> GetStaffDetail(string userName)
+        public async Task<Staff> GetStaffDetail(string username)
         {
-            var staff = (await _staffRepository.GetByFieldAsync(e => e.UserName == userName)).FirstOrDefault();
+            var staff = (await _staffRepository.GetByFieldAsync(e => e.Username == username)).FirstOrDefault();
             
             return staff;
         }

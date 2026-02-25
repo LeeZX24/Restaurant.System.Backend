@@ -12,7 +12,7 @@ namespace Restaurant.System.Data.Repositories
             _customerRepository = CustomerRepository;
         }
 
-        public async Task<bool> IsCustomerAnonymous(string customerId)
+        public async Task<bool> IsCustomerAnonymous(Guid customerId)
         {
             var customer = (await _customerRepository.GetByFieldAsync(e => e.CustomerId == customerId)).FirstOrDefault();
             return customer.IsAnonymous;
@@ -24,7 +24,7 @@ namespace Restaurant.System.Data.Repositories
             return customerList.Last() ?? null;
         }
 
-        public async Task<Customer> GetCurrentCustomer(string customerId)
+        public async Task<Customer> GetCurrentCustomer(Guid customerId)
         {
             var customer = (await _customerRepository.GetByFieldAsync(e => e.CustomerId == customerId)).FirstOrDefault();
             return customer;

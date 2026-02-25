@@ -1,11 +1,9 @@
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Restaurant.System.Api.HealthChecks;
 using Restaurant.System.Data;
 using Restaurant.System.Data.Extensions;
 using Restaurant.System.Services.Extensions;
@@ -134,8 +132,12 @@ options.TokenValidationParameters = new TokenValidationParameters
 //     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 // });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connStr));
+builder.Services.AddDbContext<AppDbContext>(options => 
+    options.UseNpgsql(connStr, 
+        b => b.MigrationsAssembly("Restaurant.System.Data")
+        .EnableRetryOnFailure()
+    )
+);
 
 builder.Services.AddDataDependencies();
 builder.Services.AddServiceDependencies();

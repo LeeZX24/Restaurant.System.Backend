@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Restaurant.System.Models.Entities
 {
     [Owned]
-    public class Address
+    public class OrderAddress
     {
         public int Id { get; set; } // Primary Key
         public required string Address1 { get; set; }
@@ -11,7 +11,6 @@ namespace Restaurant.System.Models.Entities
         public required string PostalCode { get; set; }
         public required string State { get; set; }
         public required string Country { get; set; }
-        public bool IsDefaultAddress { get; set; } = false;
         public Guid AddressGuid { get; set; } = Guid.CreateVersion7();
     }
 }

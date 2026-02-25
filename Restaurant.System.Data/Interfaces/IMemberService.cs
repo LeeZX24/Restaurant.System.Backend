@@ -5,8 +5,8 @@ namespace Restaurant.System.Data.Interfaces
     public interface IMemberService
     {
         Task<List<Member>> GetMemberList();
-        Task<Member> GetMemberDetail(string MemberId);
-        Task<Member> GetMemberByCustomer(string CustomerId);
+        Task<Member> GetMemberDetail(Guid MemberId);
+        Task<Member> GetMemberByCustomer(Guid CustomerId);
         Task<Member> GetMemberByEmail(string Email);
         Task AddNewMember(Member newMember);
     }

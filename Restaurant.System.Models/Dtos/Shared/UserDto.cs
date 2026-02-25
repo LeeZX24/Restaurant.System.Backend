@@ -12,7 +12,7 @@ namespace Restaurant.System.Models.Dtos.Shared
         public DateTime? ExpireAt { get; set; }
         //Staff
         public string[] Roles { get; set; } = [];
-        public string CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
         public bool IsEmail { get => Identifier.Contains('@'); }
     }
 }

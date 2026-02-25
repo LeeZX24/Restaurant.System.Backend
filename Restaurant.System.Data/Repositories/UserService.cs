@@ -13,7 +13,7 @@ namespace Restaurant.System.Data.Repositories
             _userRepository = UserRepository;
         }
 
-        public async Task<User> AddUserSession(string userId, UserType userType)
+        public async Task<User> AddUserSession(Guid userId, UserType userType)
         {
             var newUserSession = new User
             {
@@ -27,19 +27,19 @@ namespace Restaurant.System.Data.Repositories
             return newUserSession;
         }
 
-        public async Task<User> GetUserSession(string userId)
+        public async Task<User> GetUserSession(Guid userId)
         {
             return (await _userRepository.GetByFieldAsync(user => user.UserId == userId)).FirstOrDefault();
         }
 
-        public async Task<DateTime> GetUserLastLogin(string userId)
+        public async Task<DateTime> GetUserLastLogin(Guid userId)
         {
             return (await _userRepository.GetByFieldAsync(user => user.UserId == userId)).FirstOrDefault().LoginDateTime;
         }
 
         public async Task<List<User>> GetUserList() => await _userRepository.GetAllAsync();
 
-        public async Task UpdateUserLogin(string userId)
+        public async Task UpdateUserLogin(Guid userId)
         {
             await _userRepository.UpdateByFieldAsync(
                 user => user.UserId == userId,
@@ -50,7 +50,7 @@ namespace Restaurant.System.Data.Repositories
             await _userRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateUserLogout(string userId)
+        public async Task UpdateUserLogout(Guid userId)
         {
             await _userRepository.UpdateByFieldAsync(
                 user => user.UserId == userId,
