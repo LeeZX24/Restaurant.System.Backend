@@ -77,7 +77,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
             [
                 "https://leezx24.github.io", 
-                "https://restaurant-system-web-beta.onrender.com/"
+                "https://restaurant-system-web-beta.onrender.com"
             ])
             .AllowAnyHeader()
             .AllowAnyMethod();
