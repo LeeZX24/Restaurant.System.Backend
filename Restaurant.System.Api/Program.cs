@@ -76,7 +76,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             [
-                "https://leezx24.github.io", 
+                "https://leezx24.github.io",
                 "https://restaurant-system-web-beta.onrender.com"
             ])
             .AllowAnyHeader()
@@ -136,8 +136,8 @@ options.TokenValidationParameters = new TokenValidationParameters
 //     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 // });
 
-builder.Services.AddDbContext<AppDbContext>(options => 
-    options.UseNpgsql(connStr, 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connStr,
         b => b.MigrationsAssembly("Restaurant.System.Data")
         .EnableRetryOnFailure()
     )
@@ -181,7 +181,7 @@ app.MapHealthChecks("/api/ishealthy", new HealthCheckOptions
 // }
 
 app.UseRouting();
-app.UseCors(app.Environment.IsDevelopment() ? "DevelopmentPolicy" : "ProductionPolicy");
+app.UseCors("ProductionPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
