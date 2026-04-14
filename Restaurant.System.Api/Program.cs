@@ -76,7 +76,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             [
-                "https://stunning-chainsaw-97w55xrwvv7whj67-4200.app.github.dev/",
+                "https://stunning-chainsaw-97w55xrwvv7whj67-4200.app.github.dev",
                 "https://leezx24.github.io",
                 "https://restaurant-system-web-beta.onrender.com"
             ])
