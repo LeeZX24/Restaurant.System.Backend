@@ -79,7 +79,8 @@ builder.Services.AddCors(options =>
             [
                 "https://stunning-chainsaw-97w55xrwvv7whj67-4200.app.github.dev",
                 "https://leezx24.github.io",
-                "https://restaurant-system-web-beta.onrender.com"
+                "https://restaurant-system-web-beta.onrender.com",
+                "https://restaurant-system-web-4ji2.onrender.com/"
             ])
             .AllowAnyHeader()
             .AllowAnyMethod();
