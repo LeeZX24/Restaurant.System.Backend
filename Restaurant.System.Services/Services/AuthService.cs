@@ -105,6 +105,28 @@ namespace Restaurant.System.Services.Services
       }
     }
 
+    public async Task<UserDto> LogoutAsync(UserDto logout)
+    {
+      if (logout.IsEmail)
+      {
+        var member = await _memberService.GetMemberByEmail(logout.Identifier);
+        await _userService.UpdateUserLogout(member.MemberId);
+      }
+      else
+      {
+        var staff = await _staffService.GetStaffDetail(logout.Identifier);
+        await _userService.UpdateUserLogout(staff.StaffId);
+      }
+
+      logout.Status = Status.Success;
+      logout.ResponseDetails = new ResponseDto
+      {
+        Message = "Logout Success."
+      };
+
+      return logout;
+    }
+
     public async Task<UserDto> RegisterAsync(UserDto register)
     {
       var member = await _memberService.GetMemberByEmail(register.Identifier);

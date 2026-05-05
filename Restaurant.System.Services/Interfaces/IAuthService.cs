@@ -6,5 +6,7 @@ namespace Restaurant.System.Services.Interfaces
     {
         public Task<UserDto> LoginAsync(UserDto loginDetails);
         public Task<UserDto> RegisterAsync(UserDto registerDetails);
+
+        public Task<UserDto> LogoutAsync(UserDto logoutDetails);
     }
 }

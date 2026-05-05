@@ -44,9 +44,9 @@ namespace Restaurant.System.Controllers.Controllers
             try
             {
                 var res = await _authService.RegisterAsync(registerDetails);
-                
-                if(res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
-                
+
+                if (res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
+
                 return Ok(res);
             }
             catch (UnauthorizedAccessException ex)
@@ -58,6 +58,27 @@ namespace Restaurant.System.Controllers.Controllers
                 return StatusCode(500, new { Message = "Internal server error" }); // 500
             }
 
+        }
+
+        [HttpPost("logout")]
+        public async Task<ActionResult<UserDto>> Logout([FromBody] UserDto logoutDetails)
+        {
+            try
+            {
+                var res = await _authService.LogoutAsync(logoutDetails);
+
+                if (res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
+
+                return Ok(res);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Message = "Internal server error" }); // 500
+            }
         }
     }
 }
