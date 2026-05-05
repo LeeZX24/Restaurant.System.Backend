@@ -59,6 +59,7 @@ namespace Restaurant.System.Services.Services
 
         login.UserType = UserType.Member;
         login.Token = GenerateJwtToken(member.MemberId, member.Email, "Member", UserType.Member.ToString());
+        login.Roles = ["Member"];
         login.ExpireAt = DateTime.UtcNow.AddHours(1);
         login.Status = Status.Success;
         login.ResponseDetails = new ResponseDto
@@ -92,6 +93,7 @@ namespace Restaurant.System.Services.Services
 
         login.UserType = UserType.Staff;
         login.Token = GenerateJwtToken(staff.StaffId, staff.Username, role.RoleCode, role.RoleName);
+        login.Roles = staff.StaffRolesList.Select(staffRoles => staffRoles.Role.RoleName).ToArray();
         login.ExpireAt = DateTime.UtcNow.AddHours(1);
         login.Status = Status.Success;
         login.ResponseDetails = new ResponseDto
@@ -136,6 +138,7 @@ namespace Restaurant.System.Services.Services
       }
       register.Status = Status.Success;
       register.Token = GenerateJwtToken(member.MemberId, member.Email, UserType.Member.ToString(), "Member");
+      register.Roles = ["Member"];
       register.ExpireAt = DateTime.UtcNow.AddHours(1);
       register.ResponseDetails = new ResponseDto
       {
