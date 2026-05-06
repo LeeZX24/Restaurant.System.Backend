@@ -11,13 +11,18 @@ namespace Restaurant.System.Services.Extensions
     {
         extension(IServiceCollection services)
         {
-            
+
         }
 
         public static IServiceCollection AddServiceDependencies(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped<IAuthService, AuthService>();   
+
+            //Auth
+            services.AddScoped<IAuthService, AuthService>();
+
+            //Maintenance
+            services.AddScoped<IStaffMaintenanceService, StaffMaintenanceService>();
 
             return services;
         }

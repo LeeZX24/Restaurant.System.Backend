@@ -23,6 +23,7 @@ namespace Restaurant.System.Controllers.Controllers
         {
             try
             {
+                Console.WriteLine("Details -> ", loginDetails);
                 var response = await _authService.LoginAsync(loginDetails);
                 return Ok(response);
             }
@@ -30,8 +31,9 @@ namespace Restaurant.System.Controllers.Controllers
             {
                 return Unauthorized(new { Message = ex.Message });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine("Error : ", ex.Message);
                 return StatusCode(500, new { Message = "Internal server error" }); // 500
             }
 

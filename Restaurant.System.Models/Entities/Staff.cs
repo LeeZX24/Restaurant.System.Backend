@@ -11,7 +11,7 @@ namespace Restaurant.System.Models.Entities
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public required List<StaffRoles> StaffRolesList { get; set; } // Foreign Key
+        public List<StaffRoles> StaffRolesList { get; set; } = new List<StaffRoles>(); // Foreign Key
         public List<Order> OrderHistory { get; set; } = new List<Order>(); // Foreign Key
     }
 }

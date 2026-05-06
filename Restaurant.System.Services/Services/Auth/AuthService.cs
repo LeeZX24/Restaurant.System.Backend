@@ -59,7 +59,6 @@ namespace Restaurant.System.Services.Services
 
         login.UserType = UserType.Member;
         login.Token = GenerateJwtToken(member.MemberId, member.Email, "Member", UserType.Member.ToString());
-        login.Roles = ["Member"];
         login.ExpireAt = DateTime.UtcNow.AddHours(1);
         login.Status = Status.Success;
         login.ResponseDetails = new ResponseDto
@@ -71,6 +70,8 @@ namespace Restaurant.System.Services.Services
       }
       else
       {
+        Console.WriteLine("Login Details -> ", login);
+
         var staff = await _staffService.GetStaffDetail(login.Identifier)
           ?? throw new UnauthorizedAccessException("Staff Not Found. Please Contact Administrator.");
 
@@ -93,7 +94,6 @@ namespace Restaurant.System.Services.Services
 
         login.UserType = UserType.Staff;
         login.Token = GenerateJwtToken(staff.StaffId, staff.Username, role.RoleCode, role.RoleName);
-        login.Roles = staff.StaffRolesList.Select(staffRoles => staffRoles.Role.RoleName).ToArray();
         login.ExpireAt = DateTime.UtcNow.AddHours(1);
         login.Status = Status.Success;
         login.ResponseDetails = new ResponseDto
@@ -174,8 +174,8 @@ namespace Restaurant.System.Services.Services
     {
       var keyString = _configuration["JwtSettings:Key"]
       ?? throw new InvalidOperationException("JWT Key is missing from configuration.");
-      var _issuer = _configuration["JwtSettings:Issuer"] ?? throw new InvalidOperationException("Issuer nut found.");
-      var _audience = _configuration["JwtSettings:Audience"] ?? throw new InvalidOperationException("Audience nut found.");
+      var _issuer = _configuration["JwtSettings:Issuer"] ?? throw new InvalidOperationException("Issuer not found.");
+      var _audience = _configuration["JwtSettings:Audience"] ?? throw new InvalidOperationException("Audience not found.");
 
       double durationMinutes = 60;
       if (!double.TryParse(_configuration["JwtSettings:DurationInMinutes"], out durationMinutes))

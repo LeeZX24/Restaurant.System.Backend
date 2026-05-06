@@ -1,4 +1,5 @@
 using Restaurant.System.Data.Interfaces;
+using Restaurant.System.Models.Dtos;
 using Restaurant.System.Models.Entities;
 
 namespace Restaurant.System.Data.Repositories
@@ -17,8 +18,21 @@ namespace Restaurant.System.Data.Repositories
         public async Task<Staff> GetStaffDetail(string username)
         {
             var staff = (await _staffRepository.GetByFieldAsync(e => e.Username == username)).FirstOrDefault();
-            
+
             return staff;
         }
+
+        public async Task AddNewStaff(Staff staff)
+        {
+            await _staffRepository.AddAsync(staff);
+            await _staffRepository.SaveChangesAsync();
+        }
+        public async Task UpdateStaff(Staff staff)
+        {
+            await _staffRepository.UpdateAsync(staff);
+            await _staffRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteStaff(string username) => await _staffRepository.DeleteByFieldAsync(s => s.Username == username);
     }
 }
