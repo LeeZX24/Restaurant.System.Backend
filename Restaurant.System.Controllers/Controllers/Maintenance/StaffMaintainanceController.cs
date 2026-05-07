@@ -19,7 +19,7 @@ namespace Restaurant.System.Controllers.Controllers
             _staffMaintenanceService = staffMaintenanceService;
         }
 
-        [HttpPost("list")]
+        [HttpGet("list")]
         public async Task<ActionResult<UserDto>> GetStaffList()
         {
             try
@@ -86,7 +86,7 @@ namespace Restaurant.System.Controllers.Controllers
         {
             try
             {
-                var res = await _staffMaintenanceService.DeleteStaff(staffDetails.Username);
+                var res = await _staffMaintenanceService.DeleteStaffAsync(staffDetails.Username);
 
                 if (res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
 

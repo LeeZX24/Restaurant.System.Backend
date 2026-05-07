@@ -8,6 +8,6 @@ namespace Restaurant.System.Services.Interfaces
         public Task<StaffDto> GetStaffDetailsAsync(string username);
         public Task<StaffDto> AddNewStaffAsync(StaffDto staffDetails);
         public Task<StaffDto> UpdateStaffDetailsAsync(StaffDto staffDetails);
-        public Task<StaffDto> DeleteStaff(string username);
+        public Task<StaffDto> DeleteStaffAsync(string username);
     }
 }

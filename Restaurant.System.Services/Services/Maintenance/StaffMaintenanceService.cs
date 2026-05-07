@@ -25,10 +25,18 @@ namespace Restaurant.System.Services.Services
 
             var staffList = await _staffService.GetStaffList();
 
-            // foreach (Staff staff in staffList)
-            // {
-            //     staffDetailsList.Add()
-            // }
+            foreach (Staff staff in staffList)
+            {
+                staffDetailsList.Add(new StaffDto
+                {
+                    Username = staff.Username,
+                    Email = staff.Email,
+                    LastName = staff.LastName,
+                    FirstName = staff.FirstName,
+                    Identifier = staff.Username
+                });
+            }
+
             return staffDetailsList;
         }
 
@@ -124,7 +132,7 @@ namespace Restaurant.System.Services.Services
             return staffDetails;
         }
 
-        public async Task<StaffDto> DeleteStaff(string username)
+        public async Task<StaffDto> DeleteStaffAsync(string username)
         {
             await _staffRolesService.RemoveAllStaffRoles(username);
             await _staffService.DeleteStaff(username);
