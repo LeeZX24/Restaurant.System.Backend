@@ -52,20 +52,23 @@ namespace Restaurant.System.Services.Services
                     Email = staffDetails.IsEmail ? staffDetails.Identifier : staffDetails.Email ?? string.Empty,
                     Password = BCrypt.Net.BCrypt.HashPassword(staffDetails.Password),
                     FirstName = staffDetails.FirstName ?? string.Empty,
-                    LastName = staffDetails.LastName ?? string.Empty,
+                    LastName = staffDetails.LastName ?? string.Empty
                 };
 
                 await _staffService.AddNewStaff(staff);
 
-                foreach (Role role in staffDetails.RoleList)
+                if (staffDetails.RoleList != null)
                 {
-                    var staffRoles = new StaffRoles
+                    foreach (Role role in staffDetails.RoleList)
                     {
-                        StaffUsername = staff.Username,
-                        RoleCode = role.RoleCode
-                    };
+                        var staffRoles = new StaffRoles
+                        {
+                            StaffUsername = staff.Username,
+                            RoleCode = role.RoleCode
+                        };
 
-                    await _staffRolesService.AddStaffRoles(staffRoles);
+                        await _staffRolesService.AddStaffRoles(staffRoles);
+                    }
                 }
             }
 

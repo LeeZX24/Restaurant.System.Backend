@@ -18,6 +18,7 @@ namespace Restaurant.System.Services.Services
     private readonly IMemberService _memberService;
     private readonly IStaffService _staffService;
     private readonly IUserService _userService;
+    private readonly IStaffRolesService _staffRolesService;
     private readonly IConfiguration _configuration;
 
     public AuthService(
@@ -25,12 +26,14 @@ namespace Restaurant.System.Services.Services
         IMemberService MemberService,
         IStaffService StaffService,
         IUserService UserService,
+        IStaffRolesService StaffRolesService,
         IConfiguration Configuration)
     {
       _customerService = CustomerService;
       _memberService = MemberService;
       _staffService = StaffService;
       _userService = UserService;
+      _staffRolesService = StaffRolesService;
       _configuration = Configuration;
     }
 
@@ -80,7 +83,21 @@ namespace Restaurant.System.Services.Services
           throw new UnauthorizedAccessException("Invalid Username or Password.");
         }
 
-        var role = staff.StaffRolesList.FirstOrDefault().Role;
+        var staffRolesList = await _staffRolesService.GetStaffRolesList(staff.Username);
+
+        Role role = new Role
+        {
+          RoleCode = "ADM",
+          RoleName = "Administrator"
+        };
+
+        if (staffRolesList != null)
+        {
+          if (staffRolesList.Count != 0)
+          {
+            role = staffRolesList.FirstOrDefault().Role;
+          }
+        }
 
         var userSession = await _userService.GetUserSession(staff.StaffId);
         if (userSession == null)

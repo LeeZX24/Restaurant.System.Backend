@@ -20,8 +20,8 @@ namespace Restaurant.System.Data.Extensions
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IMemberService, MemberService>();
-            services.AddScoped<IMemberService, MemberService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IStaffRolesService, StaffRolesService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberService, MemberService>();
