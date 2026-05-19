@@ -81,7 +81,7 @@ builder.Services.AddCors(options =>
                 "https://leezx24.github.io",
                 "https://restaurant-system-web-beta.onrender.com",
                 "https://restaurant-system-web-4ji2.onrender.com",
-                "https://localhost" //temp use
+                "https://localhost:4200" //temp use
             ])
             .AllowAnyHeader()
             .AllowAnyMethod();
