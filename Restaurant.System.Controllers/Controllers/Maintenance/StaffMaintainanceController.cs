@@ -5,6 +5,7 @@ using Restaurant.System.Services.Interfaces;
 using Restaurant.System.Models.Enums;
 using Restaurant.System.Data.Interfaces;
 using Restaurant.System.Models.Dtos;
+using System.Diagnostics;
 
 namespace Restaurant.System.Controllers.Controllers
 {
@@ -39,7 +40,7 @@ namespace Restaurant.System.Controllers.Controllers
 
         }
 
-        [HttpPost("add")]
+        [HttpPost("create")]
         public async Task<ActionResult<UserDto>> AddNewStaff([FromBody] StaffDto staffDetails)
         {
             try
@@ -54,13 +55,13 @@ namespace Restaurant.System.Controllers.Controllers
             {
                 return Unauthorized(new { Message = ex.Message });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Internal server error" }); // 500
+                return StatusCode(500, new { Message = ex.Message, StackTrace = ex.StackTrace, innerMessage = ex.InnerException?.Message });
             }
         }
 
-        [HttpPost("edit")]
+        [HttpPost("update")]
         public async Task<ActionResult<UserDto>> EditStaffDetails([FromBody] StaffDto staffDetails)
         {
             try
@@ -81,7 +82,7 @@ namespace Restaurant.System.Controllers.Controllers
             }
         }
 
-        [HttpPost("remove")]
+        [HttpPost("delete")]
         public async Task<ActionResult<UserDto>> RemoveStaff([FromBody] StaffDto staffDetails)
         {
             try

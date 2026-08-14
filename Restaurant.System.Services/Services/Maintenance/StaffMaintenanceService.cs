@@ -56,8 +56,8 @@ namespace Restaurant.System.Services.Services
                 staff = new Staff
                 {
                     StaffId = Guid.CreateVersion7(),
-                    Username = staffDetails.IsEmail ? staffDetails.Username ?? string.Empty : staffDetails.Identifier,
-                    Email = staffDetails.IsEmail ? staffDetails.Identifier : staffDetails.Email ?? string.Empty,
+                    Username = staffDetails.Username,
+                    Email = staffDetails.Email,
                     Password = BCrypt.Net.BCrypt.HashPassword(staffDetails.Password),
                     FirstName = staffDetails.FirstName ?? string.Empty,
                     LastName = staffDetails.LastName ?? string.Empty

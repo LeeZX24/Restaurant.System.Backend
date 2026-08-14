@@ -13,6 +13,6 @@ namespace Restaurant.System.Models.Dtos.Shared
         //Staff
         public string[] Roles { get; set; } = [];
         public Guid CustomerId { get; set; }
-        public bool IsEmail { get => Identifier.Contains('@'); }
+        public bool IsEmail { get => Identifier.Contains('@') == true; }
     }
 }
