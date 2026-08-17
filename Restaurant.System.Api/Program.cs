@@ -10,7 +10,10 @@ using Restaurant.System.Data;
 using Restaurant.System.Data.Extensions;
 using Restaurant.System.Services.Extensions;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args
+});
 
 // Decide which connection to use
 string connStr;
