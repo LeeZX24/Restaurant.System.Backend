@@ -27,27 +27,6 @@ namespace Restaurant.System.Data.Migrations
                     table.PrimaryKey("PK_Customer", x => x.Id);
                     table.UniqueConstraint("AK_Customer_CustomerId", x => x.CustomerId);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "Dropdown",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Category = table.Column<string>(type: "text", nullable: true),
-                    Code = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Sequence = table.Column<int>(type: "integer", nullable: false),
-                    Tags = table.Column<string>(type: "text", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Dropdown", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Menu",
                 columns: table => new
@@ -539,9 +518,6 @@ namespace Restaurant.System.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "CustomerOrder");
-
-            migrationBuilder.DropTable(
-                name: "Dropdown");
 
             migrationBuilder.DropTable(
                 name: "MenuSection");

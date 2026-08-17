@@ -12,8 +12,8 @@ using Restaurant.System.Data;
 namespace Restaurant.System.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260817092504_InitialBaseline")]
-    partial class InitialBaseline
+    [Migration("20260817094506_AddDropdown")]
+    partial class AddDropdown
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,43 @@ namespace Restaurant.System.Data.Migrations
                     b.HasIndex("OrderNumber");
 
                     b.ToTable("CustomerOrder", (string)null);
+                });
+
+            modelBuilder.Entity("Restaurant.System.Models.Entities.Dropdown", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Category")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Sequence")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Tags")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Dropdown", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.Member", b =>

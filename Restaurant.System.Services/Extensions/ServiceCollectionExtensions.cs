@@ -23,6 +23,7 @@ namespace Restaurant.System.Services.Extensions
 
             //Maintenance
             services.AddScoped<IStaffMaintenanceService, StaffMaintenanceService>();
+            services.AddScoped<IDropdownMaintenanceService, DropdownMaintenanceService>();
 
             return services;
         }
