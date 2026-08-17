@@ -7,13 +7,13 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Restaurant.System.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class DbUpdate : Migration
+    public partial class InitialBaseline : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Customers",
+                name: "Customer",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -24,12 +24,12 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
-                    table.UniqueConstraint("AK_Customers_CustomerId", x => x.CustomerId);
+                    table.PrimaryKey("PK_Customer", x => x.Id);
+                    table.UniqueConstraint("AK_Customer_CustomerId", x => x.CustomerId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Dropdowns",
+                name: "Dropdown",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -45,27 +45,11 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Dropdowns", x => x.Id);
+                    table.PrimaryKey("PK_Dropdown", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MenuCategories",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CategoryCode = table.Column<string>(type: "text", nullable: false),
-                    CategoryName = table.Column<string>(type: "text", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MenuCategories", x => x.Id);
-                    table.UniqueConstraint("AK_MenuCategories_CategoryCode", x => x.CategoryCode);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Menus",
+                name: "Menu",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -76,12 +60,28 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Menus", x => x.Id);
-                    table.UniqueConstraint("AK_Menus_MenuCode", x => x.MenuCode);
+                    table.PrimaryKey("PK_Menu", x => x.Id);
+                    table.UniqueConstraint("AK_Menu_MenuCode", x => x.MenuCode);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MenuSchedules",
+                name: "MenuCategory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CategoryCode = table.Column<string>(type: "text", nullable: false),
+                    CategoryName = table.Column<string>(type: "text", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MenuCategory", x => x.Id);
+                    table.UniqueConstraint("AK_MenuCategory_CategoryCode", x => x.CategoryCode);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MenuSchedule",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -94,12 +94,12 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MenuSchedules", x => x.Id);
-                    table.UniqueConstraint("AK_MenuSchedules_ScheduleCode", x => x.ScheduleCode);
+                    table.PrimaryKey("PK_MenuSchedule", x => x.Id);
+                    table.UniqueConstraint("AK_MenuSchedule_ScheduleCode", x => x.ScheduleCode);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Roles",
+                name: "Role",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -110,12 +110,12 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
-                    table.UniqueConstraint("AK_Roles_RoleCode", x => x.RoleCode);
+                    table.PrimaryKey("PK_Role", x => x.Id);
+                    table.UniqueConstraint("AK_Role_RoleCode", x => x.RoleCode);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Staffs",
+                name: "Staff",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -131,12 +131,12 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Staffs", x => x.Id);
-                    table.UniqueConstraint("AK_Staffs_Username", x => x.Username);
+                    table.PrimaryKey("PK_Staff", x => x.Id);
+                    table.UniqueConstraint("AK_Staff_Username", x => x.Username);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -148,11 +148,11 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Members",
+                name: "Member",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -170,17 +170,17 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Members", x => x.Id);
+                    table.PrimaryKey("PK_Member", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Members_Customers_CustomerId",
+                        name: "FK_Member_Customer_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customers",
+                        principalTable: "Customer",
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MenuItems",
+                name: "MenuItem",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -194,16 +194,16 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MenuItems", x => x.Id);
+                    table.PrimaryKey("PK_MenuItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MenuItems_MenuCategories_CategoryId",
+                        name: "FK_MenuItem_MenuCategory_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "MenuCategories",
+                        principalTable: "MenuCategory",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "MenuSections",
+                name: "MenuSection",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -216,29 +216,29 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MenuSections", x => x.Id);
+                    table.PrimaryKey("PK_MenuSection", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MenuSections_MenuCategories_CategoryCode",
+                        name: "FK_MenuSection_MenuCategory_CategoryCode",
                         column: x => x.CategoryCode,
-                        principalTable: "MenuCategories",
+                        principalTable: "MenuCategory",
                         principalColumn: "CategoryCode",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MenuSections_MenuSchedules_ScheduleCode",
+                        name: "FK_MenuSection_MenuSchedule_ScheduleCode",
                         column: x => x.ScheduleCode,
-                        principalTable: "MenuSchedules",
+                        principalTable: "MenuSchedule",
                         principalColumn: "ScheduleCode",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MenuSections_Menus_MenuCode",
+                        name: "FK_MenuSection_Menu_MenuCode",
                         column: x => x.MenuCode,
-                        principalTable: "Menus",
+                        principalTable: "Menu",
                         principalColumn: "MenuCode",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Orders",
+                name: "Order",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -254,12 +254,12 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Id);
-                    table.UniqueConstraint("AK_Orders_OrderNumber", x => x.OrderNumber);
+                    table.PrimaryKey("PK_Order", x => x.Id);
+                    table.UniqueConstraint("AK_Order_OrderNumber", x => x.OrderNumber);
                     table.ForeignKey(
-                        name: "FK_Orders_Staffs_StaffUsername",
+                        name: "FK_Order_Staff_StaffUsername",
                         column: x => x.StaffUsername,
-                        principalTable: "Staffs",
+                        principalTable: "Staff",
                         principalColumn: "Username",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -278,15 +278,15 @@ namespace Restaurant.System.Data.Migrations
                 {
                     table.PrimaryKey("PK_StaffRoles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_StaffRoles_Roles_RoleCode",
+                        name: "FK_StaffRoles_Role_RoleCode",
                         column: x => x.RoleCode,
-                        principalTable: "Roles",
+                        principalTable: "Role",
                         principalColumn: "RoleCode",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_StaffRoles_Staffs_StaffUsername",
+                        name: "FK_StaffRoles_Staff_StaffUsername",
                         column: x => x.StaffUsername,
-                        principalTable: "Staffs",
+                        principalTable: "Staff",
                         principalColumn: "Username",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -309,15 +309,15 @@ namespace Restaurant.System.Data.Migrations
                 {
                     table.PrimaryKey("PK_Address", x => x.AddressGuid);
                     table.ForeignKey(
-                        name: "FK_Address_Members_MemberId",
+                        name: "FK_Address_Member_MemberId",
                         column: x => x.MemberId,
-                        principalTable: "Members",
+                        principalTable: "Member",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CustomerOrders",
+                name: "CustomerOrder",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -329,17 +329,17 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerOrders", x => x.Id);
+                    table.PrimaryKey("PK_CustomerOrder", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CustomerOrders_Customers_CustomerId",
+                        name: "FK_CustomerOrder_Customer_CustomerId",
                         column: x => x.CustomerId,
-                        principalTable: "Customers",
+                        principalTable: "Customer",
                         principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CustomerOrders_Orders_OrderNumber",
+                        name: "FK_CustomerOrder_Order_OrderNumber",
                         column: x => x.OrderNumber,
-                        principalTable: "Orders",
+                        principalTable: "Order",
                         principalColumn: "OrderNumber",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -361,15 +361,15 @@ namespace Restaurant.System.Data.Migrations
                 {
                     table.PrimaryKey("PK_OrderAddress", x => x.AddressGuid);
                     table.ForeignKey(
-                        name: "FK_OrderAddress_Orders_OrderId",
+                        name: "FK_OrderAddress_Order_OrderId",
                         column: x => x.OrderId,
-                        principalTable: "Orders",
+                        principalTable: "Order",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderGroups",
+                name: "OrderGroup",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -381,18 +381,18 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderGroups", x => x.Id);
-                    table.UniqueConstraint("AK_OrderGroups_OrderGroupId", x => x.OrderGroupId);
+                    table.PrimaryKey("PK_OrderGroup", x => x.Id);
+                    table.UniqueConstraint("AK_OrderGroup_OrderGroupId", x => x.OrderGroupId);
                     table.ForeignKey(
-                        name: "FK_OrderGroups_Orders_OrderNumber",
+                        name: "FK_OrderGroup_Order_OrderNumber",
                         column: x => x.OrderNumber,
-                        principalTable: "Orders",
+                        principalTable: "Order",
                         principalColumn: "OrderNumber",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Payments",
+                name: "Payment",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -408,17 +408,17 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Payments", x => x.Id);
+                    table.PrimaryKey("PK_Payment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Payments_Orders_OrderNumber",
+                        name: "FK_Payment_Order_OrderNumber",
                         column: x => x.OrderNumber,
-                        principalTable: "Orders",
+                        principalTable: "Order",
                         principalColumn: "OrderNumber",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderItems",
+                name: "OrderItem",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -433,16 +433,16 @@ namespace Restaurant.System.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItems", x => x.Id);
+                    table.PrimaryKey("PK_OrderItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItems_MenuItems_MenuItemId",
+                        name: "FK_OrderItem_MenuItem_MenuItemId",
                         column: x => x.MenuItemId,
-                        principalTable: "MenuItems",
+                        principalTable: "MenuItem",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_OrderItems_OrderGroups_OrderGroupId",
+                        name: "FK_OrderItem_OrderGroup_OrderGroupId",
                         column: x => x.OrderGroupId,
-                        principalTable: "OrderGroups",
+                        principalTable: "OrderGroup",
                         principalColumn: "OrderGroupId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -453,40 +453,45 @@ namespace Restaurant.System.Data.Migrations
                 column: "MemberId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerOrders_CustomerId",
-                table: "CustomerOrders",
+                name: "IX_CustomerOrder_CustomerId",
+                table: "CustomerOrder",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CustomerOrders_OrderNumber",
-                table: "CustomerOrders",
+                name: "IX_CustomerOrder_OrderNumber",
+                table: "CustomerOrder",
                 column: "OrderNumber");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Members_CustomerId",
-                table: "Members",
+                name: "IX_Member_CustomerId",
+                table: "Member",
                 column: "CustomerId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItems_CategoryId",
-                table: "MenuItems",
+                name: "IX_MenuItem_CategoryId",
+                table: "MenuItem",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuSections_CategoryCode",
-                table: "MenuSections",
+                name: "IX_MenuSection_CategoryCode",
+                table: "MenuSection",
                 column: "CategoryCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuSections_MenuCode",
-                table: "MenuSections",
+                name: "IX_MenuSection_MenuCode",
+                table: "MenuSection",
                 column: "MenuCode");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuSections_ScheduleCode",
-                table: "MenuSections",
+                name: "IX_MenuSection_ScheduleCode",
+                table: "MenuSection",
                 column: "ScheduleCode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Order_StaffUsername",
+                table: "Order",
+                column: "StaffUsername");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderAddress_OrderId",
@@ -495,28 +500,23 @@ namespace Restaurant.System.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderGroups_OrderNumber",
-                table: "OrderGroups",
+                name: "IX_OrderGroup_OrderNumber",
+                table: "OrderGroup",
                 column: "OrderNumber");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_MenuItemId",
-                table: "OrderItems",
+                name: "IX_OrderItem_MenuItemId",
+                table: "OrderItem",
                 column: "MenuItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderGroupId",
-                table: "OrderItems",
+                name: "IX_OrderItem_OrderGroupId",
+                table: "OrderItem",
                 column: "OrderGroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_StaffUsername",
-                table: "Orders",
-                column: "StaffUsername");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_OrderNumber",
-                table: "Payments",
+                name: "IX_Payment_OrderNumber",
+                table: "Payment",
                 column: "OrderNumber",
                 unique: true);
 
@@ -538,58 +538,58 @@ namespace Restaurant.System.Data.Migrations
                 name: "Address");
 
             migrationBuilder.DropTable(
-                name: "CustomerOrders");
+                name: "CustomerOrder");
 
             migrationBuilder.DropTable(
-                name: "Dropdowns");
+                name: "Dropdown");
 
             migrationBuilder.DropTable(
-                name: "MenuSections");
+                name: "MenuSection");
 
             migrationBuilder.DropTable(
                 name: "OrderAddress");
 
             migrationBuilder.DropTable(
-                name: "OrderItems");
+                name: "OrderItem");
 
             migrationBuilder.DropTable(
-                name: "Payments");
+                name: "Payment");
 
             migrationBuilder.DropTable(
                 name: "StaffRoles");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "User");
 
             migrationBuilder.DropTable(
-                name: "Members");
+                name: "Member");
 
             migrationBuilder.DropTable(
-                name: "MenuSchedules");
+                name: "MenuSchedule");
 
             migrationBuilder.DropTable(
-                name: "Menus");
+                name: "Menu");
 
             migrationBuilder.DropTable(
-                name: "MenuItems");
+                name: "MenuItem");
 
             migrationBuilder.DropTable(
-                name: "OrderGroups");
+                name: "OrderGroup");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Role");
 
             migrationBuilder.DropTable(
-                name: "Customers");
+                name: "Customer");
 
             migrationBuilder.DropTable(
-                name: "MenuCategories");
+                name: "MenuCategory");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Order");
 
             migrationBuilder.DropTable(
-                name: "Staffs");
+                name: "Staff");
         }
     }
 }
