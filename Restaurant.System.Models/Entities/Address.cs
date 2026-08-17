@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Restaurant.System.Models.Entities
 {
-    [Owned]
     public class Address
     {
         public int Id { get; set; } // Primary Key

@@ -22,7 +22,7 @@ namespace Restaurant.System.Data.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IStaffRolesService, StaffRolesService>();
-            services.AddScoped<IMemberService, MemberService>();
+            services.AddScoped<IDropdownService, DropdownService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberService, MemberService>();
             services.AddScoped<IMemberService, MemberService>();

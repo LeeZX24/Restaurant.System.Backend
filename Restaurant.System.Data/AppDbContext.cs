@@ -18,26 +18,59 @@ namespace Restaurant.System.Data
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<StaffRoles> StaffRoles => Set<StaffRoles>();
         public DbSet<User> Users => Set<User>();
-        public DbSet<Address> Addresses => Set<Address>();
 
         // Menu
         public DbSet<Menu> Menus => Set<Menu>();
         public DbSet<MenuCategory> MenuCategories => Set<MenuCategory>();
         public DbSet<MenuItem> MenuItems => Set<MenuItem>();
+        public DbSet<MenuSchedule> MenuSchedules => Set<MenuSchedule>();
+        public DbSet<MenuSection> MenuSections => Set<MenuSection>();
 
         //Order
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
         public DbSet<CustomerOrder> CustomerOrders => Set<CustomerOrder>();
         public DbSet<OrderGroup> OrderGroups => Set<OrderGroup>();
-        public DbSet<OrderAddress> OrderAddresses => Set<OrderAddress>();
 
         //Payment
         public DbSet<Payment> Payments => Set<Payment>();
 
+        //System Related
+        public DbSet<Dropdown> Dropdowns => Set<Dropdown>();
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            #region Handle Existing Table
+            // User
+            builder.Entity<Customer>().ToTable("Customer");
+            builder.Entity<Member>().ToTable("Member");
+            builder.Entity<Staff>().ToTable("Staff");
+            builder.Entity<Role>().ToTable("Role");
+            builder.Entity<StaffRoles>().ToTable("StaffRoles");
+            builder.Entity<User>().ToTable("User");
+            
+            // Menu
+            builder.Entity<MenuItem>().ToTable("MenuItem");
+            builder.Entity<MenuCategory>().ToTable("MenuCategory");
+            builder.Entity<MenuSchedule>().ToTable("MenuSchedule");
+            builder.Entity<Menu>().ToTable("Menu");
+
+            builder.Entity<MenuSection>().ToTable("MenuSection");
+
+            // Order
+            builder.Entity<Order>().ToTable("Order");
+            builder.Entity<OrderItem>().ToTable("OrderItem");
+            builder.Entity<CustomerOrder>().ToTable("CustomerOrder");
+            builder.Entity<OrderGroup>().ToTable("OrderGroup");
+
+            //Payment
+            builder.Entity<Payment>().ToTable("Payment");
+            
+            // System Related
+            builder.Entity<Dropdown>().ToTable("Dropdown");
+            #endregion
 
             #region Member
             builder.Entity<Customer>()
@@ -50,9 +83,9 @@ namespace Restaurant.System.Data
             builder.Entity<Member>()
                 .OwnsMany(m => m.AddressList, a =>
                 {
+                    a.ToTable("Address");
                     a.WithOwner().HasForeignKey("MemberId");
-                    a.Property<Guid>("AddressGuid");
-                    a.HasKey("Id", "AddressGuid");
+                    a.HasKey(x => x.AddressGuid);
                 });
             #endregion
 
@@ -116,14 +149,12 @@ namespace Restaurant.System.Data
                 .OnDelete(DeleteBehavior.Cascade);
             
             builder.Entity<Order>()
-                .OwnsOne(o => o.DeliveryAddress);
-
-             builder.Entity<Order>()
-                .HasOne(o => o.Payment)
-                .WithOne(p => p.Order)
-                .HasForeignKey<Payment>(p => p.OrderNumber)
-                .HasPrincipalKey<Order>(o => o.OrderNumber)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OwnsOne(o => o.DeliveryAddress, a =>
+                {
+                    a.ToTable("OrderAddress");
+                    a.WithOwner().HasForeignKey("OrderId");
+                    a.HasKey(x => x.AddressGuid);
+                });
             #endregion
 
             #region Menu
