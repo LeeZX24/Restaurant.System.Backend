@@ -24,12 +24,13 @@ namespace Restaurant.System.Services.Services
             {
                 dropdownList.Add(new DropdownDto
                 {
+                    CategoryDD = dropdownData.Category,
                     Category = dropdownData.Category,
                     Code = dropdownData.Code,
                     Description = dropdownData.Description,
                     SeqNo = dropdownData.Sequence,
-                    Tags = dropdownData.Tags,
-                    UpdatedDate = dropdownData.UpdatedDate.Value
+                    Tags = dropdownData.Tags ?? "" ,
+                    UpdatedDate = dropdownData.UpdatedDate
                 });
             }
 
@@ -50,7 +51,7 @@ namespace Restaurant.System.Services.Services
                     Description = dropdownData.Description,
                     SeqNo = dropdownData.Sequence,
                     Tags = dropdownData.Tags,
-                    UpdatedDate = dropdownData.UpdatedDate.Value
+                    UpdatedDate = dropdownData.UpdatedDate
                 });
             }
 
@@ -71,7 +72,7 @@ namespace Restaurant.System.Services.Services
                     Description = dropdownData.Description,
                     SeqNo = dropdownData.Sequence,
                     Tags = dropdownData.Tags,
-                    UpdatedDate = dropdownData.UpdatedDate.Value
+                    UpdatedDate = dropdownData.UpdatedDate
                 });
             }
 
