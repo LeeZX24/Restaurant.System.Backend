@@ -21,6 +21,25 @@ namespace Restaurant.System.Controllers.Controllers
             _dropdownSelectionService = dropdownSelectionService;
         }
 
+        [HttpGet("get")]
+        public async Task<ActionResult<DropdownDto>> GetDropdownData()
+        {
+            try
+            {
+                var res = await _dropdownSelectionService.GetDropdownList();
+
+                return Ok(res);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Message = "Internal server error" }); // 500
+            }
+        }
+
         [HttpPost("getbycategory")]
         public async Task<ActionResult<DropdownDto>> GetDropdownDataByCategory(string category)
         {

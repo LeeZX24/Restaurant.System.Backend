@@ -17,6 +17,26 @@ namespace Restaurant.System.Services.Services
             _dropdownService = dropdownService;
         }
 
+        public async Task<List<DropdownDto>> GetDropdownList()
+        {
+            List<DropdownDto> dropdownList = new List<DropdownDto>();
+            var dropdownDataList = await _dropdownService.GetDropdownList();
+
+            foreach (Dropdown dropdownData in dropdownDataList)
+            {
+                dropdownList.Add(new DropdownDto
+                {
+                    Category = dropdownData.Category,
+                    Code = dropdownData.Code,
+                    Description = dropdownData.Description,
+                    SeqNo = dropdownData.Sequence,
+                    Tags = dropdownData.Tags
+                });
+            }
+
+            return dropdownList;
+        }
+
         public async Task<List<DropdownDto>> GetDropdownListByCategory(string category)
         {
             List<DropdownDto> dropdownList = new List<DropdownDto>();
