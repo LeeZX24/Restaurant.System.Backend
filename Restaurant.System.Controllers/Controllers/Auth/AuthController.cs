@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.System.Models.Dtos.Shared;
-using Restaurant.System.Services.Interfaces;
 using Restaurant.System.Models.Enums;
+using Restaurant.System.Services.Interfaces.Auth;
 
-namespace Restaurant.System.Controllers.Controllers
+namespace Restaurant.System.Controllers.Controllers.Auth
 {
     [ApiController]
     [Route("api/auth")]

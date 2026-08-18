@@ -2,9 +2,9 @@ using Restaurant.System.Data.Interfaces;
 using Restaurant.System.Models.Dtos;
 using Restaurant.System.Models.Entities;
 using Restaurant.System.Models.Enums;
-using Restaurant.System.Services.Interfaces;
+using Restaurant.System.Services.Interfaces.Maintenance;
 
-namespace Restaurant.System.Services.Services
+namespace Restaurant.System.Services.Services.Maintenance
 {
     public class StaffMaintenanceService : IStaffMaintenanceService
     {

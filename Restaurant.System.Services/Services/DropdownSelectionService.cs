@@ -1,7 +1,7 @@
 using Restaurant.System.Data.Interfaces;
+using Restaurant.System.Data.Repositories;
 using Restaurant.System.Models.Dtos;
 using Restaurant.System.Models.Entities;
-using Restaurant.System.Models.Enums;
 using Restaurant.System.Services.Interfaces;
 
 namespace Restaurant.System.Services.Services
@@ -10,9 +10,7 @@ namespace Restaurant.System.Services.Services
     {
         private readonly IDropdownService _dropdownService;
 
-        public DropdownSelectionService(
-            IDropdownService dropdownService
-        )
+        public DropdownSelectionService(IDropdownService dropdownService)
         {
             _dropdownService = dropdownService;
         }
@@ -30,7 +28,8 @@ namespace Restaurant.System.Services.Services
                     Code = dropdownData.Code,
                     Description = dropdownData.Description,
                     SeqNo = dropdownData.Sequence,
-                    Tags = dropdownData.Tags
+                    Tags = dropdownData.Tags,
+                    UpdatedDate = dropdownData.UpdatedDate.Value
                 });
             }
 
@@ -50,7 +49,8 @@ namespace Restaurant.System.Services.Services
                     Code = dropdownData.Code,
                     Description = dropdownData.Description,
                     SeqNo = dropdownData.Sequence,
-                    Tags = dropdownData.Tags
+                    Tags = dropdownData.Tags,
+                    UpdatedDate = dropdownData.UpdatedDate.Value
                 });
             }
 
@@ -70,7 +70,8 @@ namespace Restaurant.System.Services.Services
                     Code = dropdownData.Code,
                     Description = dropdownData.Description,
                     SeqNo = dropdownData.Sequence,
-                    Tags = dropdownData.Tags
+                    Tags = dropdownData.Tags,
+                    UpdatedDate = dropdownData.UpdatedDate.Value
                 });
             }
 

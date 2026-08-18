@@ -23,9 +23,9 @@ namespace Restaurant.System.Data.Extensions
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IStaffRolesService, StaffRolesService>();
             services.AddScoped<IDropdownService, DropdownService>();
-            services.AddScoped<IMemberService, MemberService>();
-            services.AddScoped<IMemberService, MemberService>();
-            services.AddScoped<IMemberService, MemberService>();
+            // services.AddScoped<IMemberService, MemberService>();
+            // services.AddScoped<IMemberService, MemberService>();
+            // services.AddScoped<IMemberService, MemberService>();
 
 
             return services;

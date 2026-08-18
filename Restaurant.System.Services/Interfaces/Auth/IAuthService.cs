@@ -1,6 +1,6 @@
 using Restaurant.System.Models.Dtos.Shared;
 
-namespace Restaurant.System.Services.Interfaces
+namespace Restaurant.System.Services.Interfaces.Auth
 {
     public interface IAuthService
     {

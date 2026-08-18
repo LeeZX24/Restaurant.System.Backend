@@ -1,13 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.System.Models.Dtos.Shared;
-using Restaurant.System.Services.Interfaces;
 using Restaurant.System.Models.Enums;
-using Restaurant.System.Data.Interfaces;
 using Restaurant.System.Models.Dtos;
-using System.Diagnostics;
+using Restaurant.System.Services.Interfaces.Maintenance;
 
-namespace Restaurant.System.Controllers.Controllers
+namespace Restaurant.System.Controllers.Controllers.Maintenance
 {
     [ApiController]
     [Route("api/maintenance/dropdown")]

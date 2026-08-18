@@ -8,9 +8,9 @@ using Restaurant.System.Models.Dtos;
 using Restaurant.System.Models.Dtos.Shared;
 using Restaurant.System.Models.Entities;
 using Restaurant.System.Models.Enums;
-using Restaurant.System.Services.Interfaces;
+using Restaurant.System.Services.Interfaces.Auth;
 
-namespace Restaurant.System.Services.Services
+namespace Restaurant.System.Services.Services.Auth
 {
   public class AuthService : IAuthService
   {

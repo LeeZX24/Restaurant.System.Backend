@@ -3,7 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Restaurant.System.Data;
 using Restaurant.System.Data.Repositories;
 using Restaurant.System.Services.Interfaces;
+using Restaurant.System.Services.Interfaces.Auth;
+using Restaurant.System.Services.Interfaces.Maintenance;
 using Restaurant.System.Services.Services;
+using Restaurant.System.Services.Services.Auth;
+using Restaurant.System.Services.Services.Maintenance;
 
 namespace Restaurant.System.Services.Extensions
 {
@@ -18,12 +22,18 @@ namespace Restaurant.System.Services.Extensions
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-            //Auth
+            #region Auth
             services.AddScoped<IAuthService, AuthService>();
+            #endregion
 
-            //Maintenance
+            #region Maintenance
             services.AddScoped<IStaffMaintenanceService, StaffMaintenanceService>();
             services.AddScoped<IDropdownMaintenanceService, DropdownMaintenanceService>();
+            #endregion
+
+            #region General Services
+            services.AddScoped<IDropdownSelectionService, DropdownSelectionService>();
+            #endregion
 
             return services;
         }

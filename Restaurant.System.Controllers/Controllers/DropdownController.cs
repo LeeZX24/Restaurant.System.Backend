@@ -16,7 +16,7 @@ namespace Restaurant.System.Controllers.Controllers
     {
         private readonly IDropdownSelectionService _dropdownSelectionService;
 
-        public DropdownController(DropdownSelectionService dropdownSelectionService)
+        public DropdownController(IDropdownSelectionService dropdownSelectionService)
         {
             _dropdownSelectionService = dropdownSelectionService;
         }

@@ -1,6 +1,6 @@
 using Restaurant.System.Models.Dtos;
 
-namespace Restaurant.System.Services.Interfaces
+namespace Restaurant.System.Services.Interfaces.Maintenance
 {
     public interface IStaffMaintenanceService
     {
