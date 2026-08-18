@@ -44,32 +44,32 @@ namespace Restaurant.System.Data
 
             #region Handle Existing Table
             // User
-            builder.Entity<Customer>().ToTable("Customer");
-            builder.Entity<Member>().ToTable("Member");
-            builder.Entity<Staff>().ToTable("Staff");
-            builder.Entity<Role>().ToTable("Role");
+            builder.Entity<Customer>().ToTable("Customers");
+            builder.Entity<Member>().ToTable("Members");
+            builder.Entity<Staff>().ToTable("Staffs");
+            builder.Entity<Role>().ToTable("Roles");
             builder.Entity<StaffRoles>().ToTable("StaffRoles");
-            builder.Entity<User>().ToTable("User");
+            builder.Entity<User>().ToTable("Users");
             
             // Menu
-            builder.Entity<MenuItem>().ToTable("MenuItem");
-            builder.Entity<MenuCategory>().ToTable("MenuCategory");
-            builder.Entity<MenuSchedule>().ToTable("MenuSchedule");
+            builder.Entity<MenuItem>().ToTable("MenuItems");
+            builder.Entity<MenuCategory>().ToTable("MenuCategorys");
+            builder.Entity<MenuSchedule>().ToTable("MenuSchedules");
             builder.Entity<Menu>().ToTable("Menu");
 
-            builder.Entity<MenuSection>().ToTable("MenuSection");
+            builder.Entity<MenuSection>().ToTable("MenuSections");
 
             // Order
-            builder.Entity<Order>().ToTable("Order");
-            builder.Entity<OrderItem>().ToTable("OrderItem");
-            builder.Entity<CustomerOrder>().ToTable("CustomerOrder");
-            builder.Entity<OrderGroup>().ToTable("OrderGroup");
+            builder.Entity<Order>().ToTable("Orders");
+            builder.Entity<OrderItem>().ToTable("OrderItems");
+            builder.Entity<CustomerOrder>().ToTable("CustomerOrders");
+            builder.Entity<OrderGroup>().ToTable("OrderGroups");
 
             //Payment
-            builder.Entity<Payment>().ToTable("Payment");
+            builder.Entity<Payment>().ToTable("Payments");
             
             // System Related
-            builder.Entity<Dropdown>().ToTable("Dropdown");
+            builder.Entity<Dropdown>().ToTable("Dropdowns");
             #endregion
 
             #region Member
