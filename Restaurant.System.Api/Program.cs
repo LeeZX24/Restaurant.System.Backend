@@ -12,8 +12,23 @@ using Restaurant.System.Services.Extensions;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
-    Args = args
+    Args = args,
+    EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+        ?? Environments.Production
 });
+
+builder.Configuration.Sources.Clear();
+
+builder.Configuration
+    .AddJsonFile(
+        "appsettings.json",
+        optional: false,
+        reloadOnChange: false)
+    .AddJsonFile(
+        $"appsettings.{builder.Environment.EnvironmentName}.json",
+        optional: true,
+        reloadOnChange: false)
+    .AddEnvironmentVariables();
 
 // Decide which connection to use
 string connStr;
