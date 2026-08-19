@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Restaurant.System.Data;
 using Restaurant.System.Data.Extensions;
 using Restaurant.System.Services.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
@@ -178,6 +179,13 @@ builder.Services.AddDataProtection()
 
 builder.Services.AddSignalR();
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto;
+});
+
 var app = builder.Build();
 
 app.MapHealthChecks("/api/ishealthy", new HealthCheckOptions
@@ -202,13 +210,23 @@ app.MapHealthChecks("/api/ishealthy", new HealthCheckOptions
     }
 });
 
+app.UseForwardedHeaders();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseHttpsRedirection();
 }
 
 app.UseRouting();
-app.UseCors("ProductionPolicy");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors("DevelopmentPolicy");
+}
+else
+{
+    app.UseCors("ProductionPolicy");
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -219,12 +237,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-
 app.MapControllers();
-app.MapFallbackToFile("index.html"); // <-- For Angular routes
 
 app.MapHub<LogHub>("/logsHub");
 var hubContext = app.Services.GetRequiredService<IHubContext<LogHub>>();
@@ -254,7 +267,7 @@ if (app.Environment.IsDevelopment())
 
                     connection.on("ReceiveLog", message => {
                         const logs = document.getElementById("logs");
-                        logs.textContent += message + "\\n";
+                        logs.textContent += message + "\n";
                         window.scrollTo(0, document.body.scrollHeight);
                     });
 

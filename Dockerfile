@@ -16,11 +16,15 @@ RUN dotnet restore "Backend.sln"
 COPY . .
 
 # Build and publish
-RUN dotnet publish "Restaurant.System.Api/Restaurant.System.Api.csproj" -c Release -o /app/publish --no-restore
+RUN dotnet publish \
+    "Restaurant.System.Api/Restaurant.System.Api.csproj" \
+    -c Release \
+    -o /app/publish \
+    --no-restore \
+    /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
-EXPOSE 8080
 
 # Copy published application
 COPY --from=build /app/publish .
@@ -28,5 +32,7 @@ COPY --from=build /app/publish .
 # Set environment to production
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_URLS=http://+:8080
+
+EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "Restaurant.System.Api.dll"]
