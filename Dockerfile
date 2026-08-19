@@ -16,7 +16,7 @@ RUN dotnet restore "Backend.sln"
 COPY . .
 
 # Build and publish
-RUN dotnet publish -c Release -o /app/publish --no-restore
+RUN dotnet publish "Restaurant.System.Api/Restaurant.System.Api.csproj" -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
