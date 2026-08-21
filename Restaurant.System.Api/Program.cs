@@ -11,25 +11,15 @@ using Restaurant.System.Data.Extensions;
 using Restaurant.System.Services.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 
+var environmentName =
+    Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+    ?? Environments.Production;
+
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     Args = args,
-    EnvironmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
-        ?? Environments.Production
+    EnvironmentName = environmentName
 });
-
-builder.Configuration.Sources.Clear();
-
-builder.Configuration
-    .AddJsonFile(
-        "appsettings.json",
-        optional: false,
-        reloadOnChange: false)
-    .AddJsonFile(
-        $"appsettings.{builder.Environment.EnvironmentName}.json",
-        optional: true,
-        reloadOnChange: false)
-    .AddEnvironmentVariables();
 
 // Decide which connection to use
 string connStr;
