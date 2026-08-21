@@ -58,7 +58,7 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             }
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public async Task<ActionResult<UserDto>> EditStaffDetails([FromBody] StaffDto staffDetails)
         {
             try
@@ -79,7 +79,7 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             }
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public async Task<ActionResult<UserDto>> RemoveStaff([FromBody] StaffDto staffDetails)
         {
             try

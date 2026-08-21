@@ -57,7 +57,7 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             }
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         public async Task<ActionResult<DropdownDto>> EditDropdownDetails([FromBody] DropdownDto DropdownDetails)
         {
             try
@@ -78,7 +78,7 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             }
         }
 
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public async Task<ActionResult<DropdownDto>> RemoveDropdown([FromBody] DropdownDto dropdownData)
         {
             try
