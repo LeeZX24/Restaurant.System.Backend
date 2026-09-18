@@ -29,9 +29,9 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             {
                 return Unauthorized(new { Message = ex.Message });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, new { Message = "Internal server error" }); // 500
+                return StatusCode(500, new { Message = ex.Message, StackTrace = ex.StackTrace, innerMessage = ex.InnerException?.Message }); // 500
             }
 
         }
@@ -51,9 +51,9 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             {
                 return Unauthorized(new { Message = ex.Message });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { Message = ex.Message, StackTrace = ex.StackTrace, innerMessage = ex.InnerException?.Message });
+                return StatusCode(500, new { Message = "Internal server error" });
             }
         }
 

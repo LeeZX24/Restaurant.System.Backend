@@ -36,11 +36,13 @@ namespace Restaurant.System.Data.Repositories
 
         public async Task UpdateExistingDropdown(Dropdown dropdownData)
         {
-            await _dropdownRepository.UpdateByFieldAsync(
-                dropdown => dropdown.Category == dropdownData.Category && dropdown.Code == dropdownData.Code,
-                dropdown => dropdown,
-                dropdown => dropdownData
-                );
+            var dropdown = (await _dropdownRepository.GetByFieldAsync(e => e.Category == dropdownData.Category && e.Code == dropdownData.Code)).FirstOrDefault();
+
+            if(dropdown == null) throw new UnauthorizedAccessException("Dropdown Not Found.");
+
+            dropdown = dropdownData;
+
+            await _dropdownRepository.UpdateAsync(dropdown);
             await _dropdownRepository.SaveChangesAsync();
         }
 
