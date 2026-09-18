@@ -45,7 +45,7 @@ namespace Restaurant.System.Services.Services.Maintenance
             {
                 dropdown = new Dropdown
                 {
-                    Category = dropdownData.Category,
+                    Category = dropdownData.CategoryDD ?? dropdownData.Category,
                     Code = dropdownData.Code,
                     Description = dropdownData.Description,
                     Sequence = dropdownData.SeqNo,
