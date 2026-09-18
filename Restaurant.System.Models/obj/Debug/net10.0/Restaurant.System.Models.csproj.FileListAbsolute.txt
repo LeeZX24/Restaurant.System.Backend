@@ -1,0 +1,13 @@
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/bin/Debug/net10.0/Restaurant.System.Models.deps.json
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/bin/Debug/net10.0/Restaurant.System.Models.dll
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/bin/Debug/net10.0/Restaurant.System.Models.pdb
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/Restaurant.System.Models.csproj.AssemblyReference.cache
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/Restaurant.System.Models.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/Restaurant.System.Models.AssemblyInfoInputs.cache
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/Restaurant.System.Models.AssemblyInfo.cs
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/Restaurant.System.Models.csproj.CoreCompileInputs.cache
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/Restaurant.System.Models.sourcelink.json
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/Restaurant.System.Models.dll
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/refint/Restaurant.System.Models.dll
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/Restaurant.System.Models.pdb
+/workspaces/Restaurant.System/Backend/Restaurant.System.Models/obj/Debug/net10.0/ref/Restaurant.System.Models.dll
