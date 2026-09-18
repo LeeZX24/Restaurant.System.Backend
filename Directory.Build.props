@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup>
+    <GitVersionBaseDirectory>$(MSBuildThisFileDirectory)</GitVersionBaseDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning"
+                      Version="3.10.94"
+                      PrivateAssets="all" />
+  </ItemGroup>
+</Project>
