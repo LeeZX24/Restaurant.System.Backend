@@ -60,20 +60,6 @@ jobs:
       - name: Restore
         run: dotnet restore Backend.sln
 
-      - name: Get Version
-        id: version
-        shell: bash
-        run: |
-          VERSION=$(
-            dotnet msbuild Restaurant.System.Api/Restaurant.System.Api.csproj \
-              -t:GetBuildVersion \
-              -getProperty:BuildVersionSimple \
-            | jq -r '.Properties.BuildVersionSimple'
-          )
-
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Backend version: $VERSION"
-
       - name: Publish
         run: |
           dotnet publish \
