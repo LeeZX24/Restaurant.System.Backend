@@ -10,6 +10,7 @@ using Restaurant.System.Data;
 using Restaurant.System.Data.Extensions;
 using Restaurant.System.Services.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
+using Asp.Versioning;
 
 var environmentName =
     Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
@@ -99,15 +100,47 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddControllers().AddJsonOptions(options =>
+builder.Services
+    .AddControllers(options =>
+    {
+        options.Conventions.Add(new ApiRouteConvention());
+    })
+    .AddApplicationPart(
+        typeof(Restaurant.System.Controllers.Controllers.Auth.AuthController).Assembly
+    )
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
+builder.Services.AddApiVersioning(options =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+
+    options.ApiVersionReader = ApiVersionReader.Combine(
+        new UrlSegmentApiVersionReader(),
+        new HeaderApiVersionReader("X-API-Version")
+    );
+})
+.AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
 });
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
+    {
+        Title="Restaurant System API",
+        Version="v1"
+    });
+});
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new Exception("JWT key missing"));
@@ -180,6 +213,18 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint(
+            "/swagger/v1/swagger.json",
+            "Restaurant System API v1");
+    });
+}
+
 app.MapHealthChecks("/api/ishealthy", new HealthCheckOptions
 {
     ResponseWriter = async (context, report) =>
@@ -223,13 +268,14 @@ else
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
 app.MapControllers();
+
+foreach (var endpoint in app.Services
+    .GetRequiredService<EndpointDataSource>()
+    .Endpoints)
+{
+    Console.WriteLine($"ENDPOINT: {endpoint.DisplayName}");
+}
 
 app.MapHub<LogHub>("/logsHub");
 var hubContext = app.Services.GetRequiredService<IHubContext<LogHub>>();
@@ -277,6 +323,5 @@ else
 {
     app.MapGet("/", () => Results.Text("API running"));
 }
-
 
 app.Run();

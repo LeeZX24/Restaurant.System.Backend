@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Restaurant.System.Controllers.Controllers.Base;
 
 [ApiController]
-[Route("api/cors")]
-public class TestCorsController : ControllerBase
+[Route("cors")]
+public class TestCorsController : ApiControllerBase
 {
     [AllowAnonymous]
     [HttpGet("test")]

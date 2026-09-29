@@ -3,12 +3,13 @@ using Restaurant.System.Models.Dtos.Shared;
 using Restaurant.System.Models.Enums;
 using Restaurant.System.Models.Dtos;
 using Restaurant.System.Services.Interfaces.Maintenance;
+using Restaurant.System.Controllers.Controllers.Base;
 
 namespace Restaurant.System.Controllers.Controllers.Maintenance
 {
     [ApiController]
-    [Route("api/maintenance/staff")]
-    public class StaffMaintenanceController : ControllerBase
+    [Route("maintenance/staff")]
+    public class StaffMaintenanceController : ApiControllerBase
     {
         private readonly IStaffMaintenanceService _staffMaintenanceService;
 

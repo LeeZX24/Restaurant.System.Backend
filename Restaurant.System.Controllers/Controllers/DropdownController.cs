@@ -1,18 +1,13 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.System.Models.Dtos.Shared;
 using Restaurant.System.Services.Interfaces;
-using Restaurant.System.Models.Enums;
-using Restaurant.System.Data.Interfaces;
 using Restaurant.System.Models.Dtos;
-using System.Diagnostics;
-using Restaurant.System.Services.Services;
+using Restaurant.System.Controllers.Controllers.Base;
 
 namespace Restaurant.System.Controllers.Controllers
 {
     [ApiController]
-    [Route("api/dropdown")]
-    public class DropdownController : ControllerBase
+    [Route("dropdown")]
+    public class DropdownController : ApiControllerBase
     {
         private readonly IDropdownSelectionService _dropdownSelectionService;
 

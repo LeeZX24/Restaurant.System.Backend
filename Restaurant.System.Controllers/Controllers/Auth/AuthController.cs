@@ -1,5 +1,7 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Restaurant.System.Controllers.Controllers.Base;
 using Restaurant.System.Models.Dtos.Shared;
 using Restaurant.System.Models.Enums;
 using Restaurant.System.Services.Interfaces.Auth;
@@ -7,14 +9,21 @@ using Restaurant.System.Services.Interfaces.Auth;
 namespace Restaurant.System.Controllers.Controllers.Auth
 {
     [ApiController]
-    [Route("api/auth")]
-    public class AuthController : ControllerBase
+    [ApiVersion(1.0)]
+    [Route("auth")]
+    public class AuthController : ApiControllerBase
     {
         private readonly IAuthService _authService;
 
         public AuthController(IAuthService authService)
         {
             _authService = authService;
+        }
+
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok("Auth API v1");
         }
 
         [AllowAnonymous]
