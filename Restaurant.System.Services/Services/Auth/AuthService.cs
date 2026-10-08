@@ -4,8 +4,8 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Restaurant.System.Data.Interfaces;
-using Restaurant.System.Models.Dtos;
-using Restaurant.System.Models.Dtos.Shared;
+using Restaurant.System.Models.Dtos.Requests;
+using Restaurant.System.Models.Dtos.Responses;
 using Restaurant.System.Models.Entities;
 using Restaurant.System.Models.Enums;
 using Restaurant.System.Services.Interfaces.Auth;
@@ -37,8 +37,10 @@ namespace Restaurant.System.Services.Services.Auth
       _configuration = Configuration;
     }
 
-    public async Task<UserDto> LoginAsync(UserDto login)
+    public async Task<AppLoginResponse> LoginAsync(AppLoginRequest login)
     {
+      AppLoginResponse response = new();
+
       if (login.IsEmail)
       {
         var member = await _memberService.GetMemberByEmail(login.Identifier);
@@ -60,16 +62,30 @@ namespace Restaurant.System.Services.Services.Auth
           await _userService.UpdateUserLogin(member.MemberId);
         }
 
-        login.UserType = UserType.Member;
-        login.Token = GenerateJwtToken(member.MemberId, member.Email, "Member", UserType.Member.ToString());
-        login.ExpireAt = DateTime.UtcNow.AddHours(1);
-        login.Status = Status.Success;
-        login.ResponseDetails = new ResponseDto
-        {
-          Message = "Login Success."
+        response.Token = GenerateJwtToken(member.MemberId, member.Email, "Member", UserType.Member.ToString());
+        response.ExpireAt = DateTime.UtcNow.AddHours(1);
+
+        response.Status = Status.Success;
+        response.Message = "Login Success.";
+
+        response.UserInfo = new() {
+          UserType = UserType.Member,
+          CustomerId = member.CustomerId,
+          ProfileInfo = new() {
+            LastName = member.LastName,
+            FirstName = member.FirstName,
+          },
+          AccountInfo = new(){
+            Identifier = login.Identifier,
+            Email = member.Email
+          },
+          SecurityInfo = new(){
+            IsEmailVerified = true,
+            IsMfaEnabled = true
+          }
         };
 
-        return login;
+        return response;
       }
       else
       {
@@ -109,82 +125,92 @@ namespace Restaurant.System.Services.Services.Auth
           await _userService.UpdateUserLogin(staff.StaffId);
         }
 
-        login.UserType = UserType.Staff;
-        login.Token = GenerateJwtToken(staff.StaffId, staff.Username, role.RoleCode, role.RoleName);
-        login.ExpireAt = DateTime.UtcNow.AddHours(1);
-        login.Status = Status.Success;
-        login.ResponseDetails = new ResponseDto
-        {
-          Message = "Login Success."
+        response.Token = GenerateJwtToken(staff.StaffId, staff.Username, role.RoleCode, role.RoleName);
+        response.ExpireAt = DateTime.UtcNow.AddHours(1);
+
+        response.Status = Status.Success;
+        response.Message = "Login Success.";
+
+        response.UserInfo = new() {
+          UserType = UserType.Staff,
+          ProfileInfo = new() {
+            LastName = staff.LastName,
+            FirstName = staff.FirstName,
+          },
+          AccountInfo = new(){
+            Identifier = login.Identifier,
+            Username = staff.Username,
+            Email = staff.Email,
+          },
+          SecurityInfo = new(){
+            IsEmailVerified = true,
+            IsMfaEnabled = true
+          }
         };
 
-        return login;
+        return response;
       }
     }
 
-    public async Task<UserDto> LogoutAsync(UserDto logout)
+    public async Task<AppLogoutResponse> LogoutAsync(AppLogoutRequest logout)
     {
-      if (logout.IsEmail)
-      {
-        var member = await _memberService.GetMemberByEmail(logout.Identifier);
-        await _userService.UpdateUserLogout(member.MemberId);
-      }
+      var userId = Guid.Empty;
+      var Identifier = logout.UserInfo.AccountInfo.Identifier;
+      
+      if (logout.UserInfo.AccountInfo.IsEmail)
+        userId = (await _memberService.GetMemberByEmail(Identifier)).MemberId;
       else
-      {
-        var staff = await _staffService.GetStaffDetail(logout.Identifier);
-        await _userService.UpdateUserLogout(staff.StaffId);
-      }
+        userId = (await _staffService.GetStaffDetail(Identifier)).StaffId;
 
-      logout.Status = Status.Success;
-      logout.ResponseDetails = new ResponseDto
-      {
-        Message = "Logout Success."
-      };
+      await _userService.UpdateUserLogout(userId);
 
-      return logout;
+      return new() { Message = "Logout Success.", Status = Status.Success };
     }
 
-    public async Task<UserDto> RegisterAsync(UserDto register)
+    public async Task<AppRegisterResponse> RegisterAsync(AppRegisterRequest register)
     {
+      var response = new AppRegisterResponse();
+
       var member = await _memberService.GetMemberByEmail(register.Identifier);
       if (member != null) throw new UnauthorizedAccessException("Email Already Registered.");
       else
       {
-        var customer = await _customerService.GetCurrentCustomer(register.CustomerId);
-        if (customer != null) customer.IsAnonymous = false;
+        var customerId = register.CustomerId ?? Guid.Empty;
+        if(customerId == Guid.Empty) throw new UnauthorizedAccessException("Please register as Customer.");
         else
         {
-          //Registering
-          customer = new Customer
+          var customer = await _customerService.GetCurrentCustomer(customerId);
+          
+          if (customer != null) customer.IsAnonymous = false;
+          else
           {
-            CustomerId = register.CustomerId,
-            IsAnonymous = false
+            //Registering
+            customer = new()
+            {
+              CustomerId = customerId,
+              IsAnonymous = false
+            };
+
+            await _customerService.AddNewCustomer(customer);
+          }
+
+          member = new Member
+          {
+            MemberId = Guid.CreateVersion7(),
+            CustomerId = customerId,
+            Email = register.IsEmail ? register.Identifier : string.Empty,
+            Username = register.IsEmail ? string.Empty : register.Identifier,
+            Password = BCrypt.Net.BCrypt.HashPassword(register.Password)
           };
+          
+          await _memberService.AddNewMember(member);
 
-          await _customerService.AddNewCustomer(customer);
+          response.Status = Status.Success;
+          response.Message = "Member Registration Success.";
         }
-
-        member = new Member
-        {
-          MemberId = Guid.CreateVersion7(),
-          CustomerId = register.CustomerId,
-          Email = register.IsEmail ? register.Identifier : string.Empty,
-          Username = register.IsEmail ? string.Empty : register.Identifier,
-          Password = BCrypt.Net.BCrypt.HashPassword(register.Password)
-        };
-
-        await _memberService.AddNewMember(member);
       }
-      register.Status = Status.Success;
-      register.Token = GenerateJwtToken(member.MemberId, member.Email, UserType.Member.ToString(), "Member");
-      register.Roles = ["Member"];
-      register.ExpireAt = DateTime.UtcNow.AddHours(1);
-      register.ResponseDetails = new ResponseDto
-      {
-        Message = "Member Registration Success."
-      };
 
-      return register;
+      return response;
     }
 
     private string GenerateJwtToken(Guid userId, string userName, string role, string userType)

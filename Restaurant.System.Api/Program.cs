@@ -129,7 +129,8 @@ builder.Services.AddApiVersioning(options =>
 {
     options.GroupNameFormat = "'v'VVV";
     options.SubstituteApiVersionInUrl = true;
-});
+})
+.AddMvc();
 
 builder.Services.AddEndpointsApiExplorer();
 

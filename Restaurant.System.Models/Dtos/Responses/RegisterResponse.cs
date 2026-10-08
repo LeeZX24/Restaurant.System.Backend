@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Restaurant.System.Models.Dtos.Shared;
+using Restaurant.System.Models.Dtos.Shared.Base;
 
 namespace Restaurant.System.Models.Dtos.Responses
 {
-    public class RegisterResponse
+    public class AppRegisterResponse: BaseResponseDto
     {
     }
 }
