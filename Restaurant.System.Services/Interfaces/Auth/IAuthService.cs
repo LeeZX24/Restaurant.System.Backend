@@ -10,5 +10,7 @@ namespace Restaurant.System.Services.Interfaces.Auth
         public Task<AppRegisterResponse> RegisterAsync(AppRegisterRequest registerDetails);
 
         public Task<AppLogoutResponse> LogoutAsync(AppLogoutRequest logoutDetails);
+
+        public Task<AppChangePasswordResponse> ChangePasswordAsync(AppChangePasswordRequest changePasswordDetails);
     }
 }

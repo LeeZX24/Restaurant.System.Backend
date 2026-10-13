@@ -4,5 +4,6 @@ namespace Restaurant.System.Models.Dtos
     {
         public bool IsEmailVerified { get; set; }
         public bool IsMfaEnabled { get; set; }
+        public bool MustChangePassword { get; set; }
     }
 }

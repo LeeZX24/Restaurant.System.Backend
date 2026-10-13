@@ -9,5 +9,7 @@ namespace Restaurant.System.Data.Interfaces
         Task<Member> GetMemberByCustomer(Guid CustomerId);
         Task<Member> GetMemberByEmail(string Email);
         Task AddNewMember(Member newMember);
+        Task UpdateMember(Member Member);
+        Task MemberChangePassword(Guid MemberId, string NewPassword);
     }
 }

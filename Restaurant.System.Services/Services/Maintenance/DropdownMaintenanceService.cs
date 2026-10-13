@@ -18,7 +18,7 @@ namespace Restaurant.System.Services.Services.Maintenance
         }
         public async Task<List<DropdownDto>> GetDropdownListAsync()
         {
-            List<DropdownDto> DropdownDataList = new List<DropdownDto>();
+            List<DropdownDto> DropdownDataList = new();
 
             var DropdownList = await _dropdownService.GetDropdownList();
 
@@ -55,11 +55,8 @@ namespace Restaurant.System.Services.Services.Maintenance
                 await _dropdownService.CreateNewDropdown(dropdown);
             }
 
-            dropdownData.Status = Status.Success;
-            dropdownData.ResponseDetails = new ResponseDto
-            {
-                Message = "Dropdown Adding Success."
-            };
+            dropdownData.ResponseDetails.Status = Status.Success;
+            dropdownData.ResponseDetails.Message = "Dropdown Adding Success.";
 
             return dropdownData;
         }
@@ -76,11 +73,8 @@ namespace Restaurant.System.Services.Services.Maintenance
 
             await _dropdownService.UpdateExistingDropdown(dropdown);
 
-            dropdownData.Status = Status.Success;
-            dropdownData.ResponseDetails = new ResponseDto
-            {
-                Message = "Dropdown Updated Success."
-            };
+            dropdownData.ResponseDetails.Status = Status.Success;
+            dropdownData.ResponseDetails.Message = "Dropdown Updated Success.";
 
             return dropdownData;
         }
@@ -90,11 +84,8 @@ namespace Restaurant.System.Services.Services.Maintenance
             var dropdown = await _dropdownService.GetDropdownDetails(dropdownData);
             if (dropdown != null) await _dropdownService.DeleteDropdown(dropdown);
 
-            dropdownData.Status = Status.Success;
-            dropdownData.ResponseDetails = new ResponseDto
-            {
-                Message = "Dropdown Delete Success."
-            };
+            dropdownData.ResponseDetails.Status = Status.Success;
+            dropdownData.ResponseDetails.Message = "Dropdown Delete Success.";
 
             return dropdownData;
         }

@@ -15,24 +15,33 @@ namespace Restaurant.System.Data.Repositories
 
         public async Task<List<Staff>> GetStaffList() => await _staffRepository.GetAllAsync();
 
-        public async Task<Staff> GetStaffDetail(string username)
+        public async Task<Staff> GetStaffDetail(string Username)
         {
-            var staff = (await _staffRepository.GetByFieldAsync(e => e.Username == username)).FirstOrDefault();
+            var staff = (await _staffRepository.GetByFieldAsync(e => e.Username == Username)).FirstOrDefault();
 
             return staff;
         }
 
-        public async Task AddNewStaff(Staff staff)
+        public async Task AddNewStaff(Staff Staff)
         {
-            await _staffRepository.AddAsync(staff);
+            await _staffRepository.AddAsync(Staff);
             await _staffRepository.SaveChangesAsync();
         }
-        public async Task UpdateStaff(Staff staff)
+        public async Task UpdateStaff(Staff Staff)
         {
-            await _staffRepository.UpdateAsync(staff);
+            await _staffRepository.UpdateAsync(Staff);
             await _staffRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteStaff(string username) => await _staffRepository.DeleteByFieldAsync(s => s.Username == username);
+        public async Task StaffChangePassword(Guid StaffId, string NewPassword)
+        {
+            await _staffRepository.UpdateByFieldAsync(staff => 
+                staff.StaffId == StaffId,
+                staff => staff.Password, 
+                staff => NewPassword);
+            await _staffRepository.SaveChangesAsync();
+        }
+
+        public async Task DeleteStaff(string Username) => await _staffRepository.DeleteByFieldAsync(s => s.Username == Username);
     }
 }

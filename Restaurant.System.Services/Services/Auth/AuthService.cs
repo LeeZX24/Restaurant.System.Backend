@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Restaurant.System.Data.Interfaces;
+using Restaurant.System.Models.Dtos;
 using Restaurant.System.Models.Dtos.Requests;
 using Restaurant.System.Models.Dtos.Responses;
 using Restaurant.System.Models.Entities;
@@ -17,6 +18,7 @@ namespace Restaurant.System.Services.Services.Auth
     private readonly ICustomerService _customerService;
     private readonly IMemberService _memberService;
     private readonly IStaffService _staffService;
+    private readonly IRoleService _roleService;
     private readonly IUserService _userService;
     private readonly IStaffRolesService _staffRolesService;
     private readonly IConfiguration _configuration;
@@ -25,6 +27,7 @@ namespace Restaurant.System.Services.Services.Auth
         ICustomerService CustomerService,
         IMemberService MemberService,
         IStaffService StaffService,
+        IRoleService RoleService,
         IUserService UserService,
         IStaffRolesService StaffRolesService,
         IConfiguration Configuration)
@@ -32,123 +35,133 @@ namespace Restaurant.System.Services.Services.Auth
       _customerService = CustomerService;
       _memberService = MemberService;
       _staffService = StaffService;
+      _roleService = RoleService;
       _userService = UserService;
       _staffRolesService = StaffRolesService;
       _configuration = Configuration;
     }
 
-    public async Task<AppLoginResponse> LoginAsync(AppLoginRequest login)
+    private async Task<AppLoginResponse> MemberLoginAsync(AppLoginRequest login, Member member)
     {
-      AppLoginResponse response = new();
+      var response = new AppLoginResponse();
 
-      if (login.IsEmail)
+      if (login.Password == null || !BCrypt.Net.BCrypt.Verify(login.Password, member.Password))
       {
-        var member = await _memberService.GetMemberByEmail(login.Identifier);
-        if (member == null) throw new UnauthorizedAccessException("Member Not Found. Please Register.");
+        throw new UnauthorizedAccessException("Invalid Username or Password.");
+      }
 
-        if (login == null || !BCrypt.Net.BCrypt.Verify(login.Password, member.Password))
-        {
-          throw new UnauthorizedAccessException("Invalid Email or Password.");
-        }
-
-        var userSession = await _userService.GetUserSession(member.MemberId);
-        if (userSession == null)
-        {
-          await _userService.AddUserSession(member.MemberId, UserType.Member);
-          await _userService.UpdateUserLogin(member.MemberId);
-        }
-        else
-        {
-          await _userService.UpdateUserLogin(member.MemberId);
-        }
-
-        response.Token = GenerateJwtToken(member.MemberId, member.Email, "Member", UserType.Member.ToString());
-        response.ExpireAt = DateTime.UtcNow.AddHours(1);
-
-        response.Status = Status.Success;
-        response.Message = "Login Success.";
-
-        response.UserInfo = new() {
-          UserType = UserType.Member,
-          CustomerId = member.CustomerId,
-          ProfileInfo = new() {
-            LastName = member.LastName,
-            FirstName = member.FirstName,
-          },
-          AccountInfo = new(){
-            Identifier = login.Identifier,
-            Email = member.Email
-          },
-          SecurityInfo = new(){
-            IsEmailVerified = true,
-            IsMfaEnabled = true
-          }
-        };
-
-        return response;
+      var userSession = await _userService.GetUserSession(member.MemberId);
+      if (userSession == null)
+      {
+        await _userService.AddUserSession(member.MemberId, UserType.Member);
+        await _userService.UpdateUserLogin(member.MemberId);
       }
       else
       {
-        Console.WriteLine("Login Details -> ", login);
+        await _userService.UpdateUserLogin(member.MemberId);
+      }
 
-        var staff = await _staffService.GetStaffDetail(login.Identifier)
+      response.Token = GenerateJwtToken(member.MemberId, member.Email, "Member", UserType.Member.ToString());
+      response.ExpireAt = DateTime.UtcNow.AddHours(1);
+
+      response.Status = Status.Success;
+      response.Message = "Login Success.";
+
+      response.UserInfo = new() {
+        UserType = UserType.Member,
+        CustomerId = member.CustomerId,
+        ProfileInfo = new() {
+          LastName = member.LastName,
+          FirstName = member.FirstName,
+        },
+        AccountInfo = new(){
+          Identifier = member.Email,
+          Email = member.Email
+        },
+        SecurityInfo = new(){
+          IsEmailVerified = true,
+          IsMfaEnabled = true
+        },
+        Roles = new List<RoleDto> { new() { RoleCode = "Member", RoleName = "Member" } }
+      };
+
+      return response;
+    }
+
+    private async Task<AppLoginResponse> StaffLoginAsync(AppLoginRequest login, Staff staff)
+    {
+      var response = new AppLoginResponse();
+
+      if (login.Password == null || !BCrypt.Net.BCrypt.Verify(login.Password, staff.Password))
+        throw new UnauthorizedAccessException("Invalid Username or Password.");
+
+      List<RoleDto> roleList = [];
+
+      var staffRolesList = await _staffRolesService.GetStaffRolesList(staff.Username);
+
+      foreach (StaffRoles staffRoles in staffRolesList)
+      {
+        var userRole = await _roleService.GetRoleDetail(staffRoles.RoleCode) 
+          ?? throw new UnauthorizedAccessException($"Role '{staffRoles.RoleCode}' Not Found.");
+
+        roleList.Add(new RoleDto { RoleCode = userRole.RoleCode, RoleName = userRole.RoleName });
+      }
+
+      var userSession = await _userService.GetUserSession(staff.StaffId);
+      var changePassword = false;
+      if (userSession == null)
+      {
+        await _userService.AddUserSession(staff.StaffId, UserType.Staff);
+        changePassword = true;
+      }
+      else
+      {
+        await _userService.UpdateUserLogin(staff.StaffId);
+      }
+
+      response.Token = GenerateJwtToken(staff.StaffId, staff.Username, roleList.FirstOrDefault()?.RoleCode ?? "admin", roleList.FirstOrDefault()?.RoleName ?? "Administrator");
+      response.ExpireAt = DateTime.UtcNow.AddHours(1);
+
+      response.Status = Status.Success;
+      response.Message = "Login Success.";
+
+      response.UserInfo = new() {
+        UserType = UserType.Staff,
+        ProfileInfo = new() {
+          LastName = staff.LastName,
+          FirstName = staff.FirstName,
+        },
+        AccountInfo = new() {
+          Identifier = login.Identifier,
+          Username = staff.Username,
+          Email = staff.Email,
+        },
+        SecurityInfo = new() {
+          IsEmailVerified = true,
+          IsMfaEnabled = true,
+          MustChangePassword = changePassword
+        },
+        Roles = roleList
+      };
+
+      return response;
+    }
+
+    public async Task<AppLoginResponse> LoginAsync(AppLoginRequest login)
+    {
+      if (login.IsEmail)
+      {
+        var member = await _memberService.GetMemberByEmail(login.Identifier)
+         ?? throw new UnauthorizedAccessException("Member Not Found. Please Register.");
+
+        return await MemberLoginAsync(login, member);
+      }
+      else
+      {
+         var staff = await _staffService.GetStaffDetail(login.Identifier)
           ?? throw new UnauthorizedAccessException("Staff Not Found. Please Contact Administrator.");
 
-        if (login.Password == null || !BCrypt.Net.BCrypt.Verify(login.Password, staff.Password))
-        {
-          throw new UnauthorizedAccessException("Invalid Username or Password.");
-        }
-
-        var staffRolesList = await _staffRolesService.GetStaffRolesList(staff.Username);
-
-        Role role = new Role
-        {
-          RoleCode = "ADM",
-          RoleName = "Administrator"
-        };
-
-        if (staffRolesList != null)
-        {
-          if (staffRolesList.Count != 0)
-          {
-            role = staffRolesList.FirstOrDefault().Role;
-          }
-        }
-
-        var userSession = await _userService.GetUserSession(staff.StaffId);
-        if (userSession == null)
-        {
-          await _userService.AddUserSession(staff.StaffId, UserType.Staff);
-        }
-        else
-        {
-          await _userService.UpdateUserLogin(staff.StaffId);
-        }
-
-        response.Token = GenerateJwtToken(staff.StaffId, staff.Username, role.RoleCode, role.RoleName);
-        response.ExpireAt = DateTime.UtcNow.AddHours(1);
-
-        response.Status = Status.Success;
-        response.Message = "Login Success.";
-
-        response.UserInfo = new() {
-          UserType = UserType.Staff,
-          ProfileInfo = new() {
-            LastName = staff.LastName,
-            FirstName = staff.FirstName,
-          },
-          AccountInfo = new(){
-            Identifier = login.Identifier,
-            Username = staff.Username,
-            Email = staff.Email,
-          },
-          SecurityInfo = new(){
-            IsEmailVerified = true,
-            IsMfaEnabled = true
-          }
-        };
-
-        return response;
+        return await StaffLoginAsync(login, staff);
       }
     }
 
@@ -209,6 +222,39 @@ namespace Restaurant.System.Services.Services.Auth
           response.Message = "Member Registration Success.";
         }
       }
+
+      return response;
+    }
+
+    public async Task<AppChangePasswordResponse> ChangePasswordAsync(AppChangePasswordRequest changePasswordDetails)
+    {
+      var response = new AppChangePasswordResponse();
+
+      var Identifier = changePasswordDetails.UserInfo.AccountInfo.Identifier;
+
+      if (changePasswordDetails.UserInfo.AccountInfo.IsEmail)
+      {
+        var member = await _memberService.GetMemberByEmail(Identifier)
+          ?? throw new UnauthorizedAccessException("Member Not Found.");
+
+        if(BCrypt.Net.BCrypt.Verify(changePasswordDetails.NewPassword, member.Password)) throw new UnauthorizedAccessException("'New Password' needs to be different from 'Current Password'.");
+        var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDetails.NewPassword);
+        
+        await _memberService.MemberChangePassword(member.MemberId, newPasswordHash);
+      }
+      else
+      {
+        var staff = await _staffService.GetStaffDetail(Identifier)
+          ?? throw new UnauthorizedAccessException("Staff Not Found.");
+
+        if(BCrypt.Net.BCrypt.Verify(changePasswordDetails.NewPassword, staff.Password)) throw new UnauthorizedAccessException("'New Password' needs to be different from 'Current Password'.");
+        var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDetails.NewPassword);
+        
+        await _staffService.StaffChangePassword(staff.StaffId, newPasswordHash);
+      }
+
+      response.Status = Status.Success;
+      response.Message = "Change Password Success.";
 
       return response;
     }

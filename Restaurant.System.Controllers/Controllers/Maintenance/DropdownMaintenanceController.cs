@@ -44,7 +44,7 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             {
                 var res = await _dropdownMaintenanceService.AddNewDropdownAsync(dropdownData);
 
-                if (res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
+                if (res.ResponseDetails.IsFailed) return BadRequest(new { Message = res.ResponseDetails.Message });
 
                 return Ok(res);
             }
@@ -65,7 +65,7 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             {
                 var res = await _dropdownMaintenanceService.UpdateDropdownDetailsAsync(DropdownDetails);
 
-                if (res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
+                if (res.ResponseDetails.IsFailed) return BadRequest(new { Message = res.ResponseDetails.Message });
 
                 return Ok(res);
             }
@@ -86,7 +86,7 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             {
                 var res = await _dropdownMaintenanceService.DeleteDropdownAsync(dropdownData);
 
-                if (res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
+                if (res.ResponseDetails.IsFailed) return BadRequest(new { Message = res.ResponseDetails.Message });
 
                 return Ok(res);
             }

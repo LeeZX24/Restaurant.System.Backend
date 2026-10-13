@@ -32,7 +32,11 @@ namespace Restaurant.System.Controllers.Controllers.Auth
             try
             {
                 Console.WriteLine("Details -> ", loginDetails);
+                if(loginDetails == null || string.IsNullOrEmpty(loginDetails.Identifier) || string.IsNullOrEmpty(loginDetails.Password))
+                    return BadRequest(new { Message = "Invalid login request" });
+
                 var response = await _authService.LoginAsync(loginDetails);
+                
                 return Ok(response);
             }
             catch (UnauthorizedAccessException ex)
@@ -55,7 +59,7 @@ namespace Restaurant.System.Controllers.Controllers.Auth
             {
                 var res = await _authService.RegisterAsync(registerDetails);
 
-                if (res.Status != Status.Success) return BadRequest(new { Message = res.Message });
+                if (res.IsFailed) return BadRequest(new { Message = res.Message });
 
                 return Ok(res);
             }
@@ -77,7 +81,28 @@ namespace Restaurant.System.Controllers.Controllers.Auth
             {
                 var res = await _authService.LogoutAsync(logoutDetails);
 
-                if (res.Status != Status.Success) return BadRequest(new { Message = res.Message });
+                if (res.IsFailed) return BadRequest(new { Message = res.Message });
+
+                return Ok(res);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { Message = "Internal server error" }); // 500
+            }
+        }
+
+        [HttpPut("change-password")]
+        public async Task<ActionResult<AppChangePasswordResponse>> ChangePassword([FromBody] AppChangePasswordRequest changePasswordDetails)
+        {
+            try
+            {
+                var res = await _authService.ChangePasswordAsync(changePasswordDetails);
+
+                if (res.IsFailed) return BadRequest(new { Message = res.Message });
 
                 return Ok(res);
             }

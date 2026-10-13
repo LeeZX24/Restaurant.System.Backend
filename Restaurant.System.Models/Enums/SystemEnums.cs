@@ -53,6 +53,6 @@ namespace Restaurant.System.Models.Enums
     {
         Pending = 0,
         Success = 1,
-        Error = 2
+        Failed = 2
     }
 }
