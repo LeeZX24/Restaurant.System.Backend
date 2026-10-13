@@ -1,7 +1,9 @@
 using Restaurant.System.Data.Interfaces;
 using Restaurant.System.Models.Dtos;
+using Restaurant.System.Models.Dtos.Shared;
 using Restaurant.System.Models.Entities;
 using Restaurant.System.Models.Enums;
+using Restaurant.System.Models.Utils;
 using Restaurant.System.Services.Interfaces.Maintenance;
 
 namespace Restaurant.System.Services.Services.Maintenance
@@ -9,19 +11,22 @@ namespace Restaurant.System.Services.Services.Maintenance
     public class StaffMaintenanceService : IStaffMaintenanceService
     {
         private readonly IStaffService _staffService;
+        private readonly IRoleService _roleService;
         private readonly IStaffRolesService _staffRolesService;
 
         public StaffMaintenanceService(
             IStaffService StaffService,
+            IRoleService RoleService,
             IStaffRolesService StaffRolesService
         )
         {
             _staffService = StaffService;
+            _roleService = RoleService;
             _staffRolesService = StaffRolesService;
         }
         public async Task<List<StaffDto>> GetStaffListAsync()
         {
-            List<StaffDto> staffDetailsList = new List<StaffDto>();
+            List<StaffDto> staffDetailsList = new();
 
             var staffList = await _staffService.GetStaffList();
 
@@ -32,8 +37,7 @@ namespace Restaurant.System.Services.Services.Maintenance
                     Username = staff.Username,
                     Email = staff.Email,
                     LastName = staff.LastName,
-                    FirstName = staff.FirstName,
-                    Identifier = staff.Username
+                    FirstName = staff.FirstName
                 });
             }
 
@@ -49,57 +53,61 @@ namespace Restaurant.System.Services.Services.Maintenance
 
         public async Task<StaffDto> AddNewStaffAsync(StaffDto staffDetails)
         {
-            var staff = await _staffService.GetStaffDetail(staffDetails.Identifier);
+            var staff = await _staffService.GetStaffDetail(staffDetails.Username);
             if (staff != null) throw new UnauthorizedAccessException("Staff Already Existed.");
             else
             {
+                var tempPassword = AuthUtil.GenerateRandomPassword(12);
                 staff = new Staff
                 {
                     StaffId = Guid.CreateVersion7(),
                     Username = staffDetails.Username,
                     Email = staffDetails.Email,
-                    Password = BCrypt.Net.BCrypt.HashPassword(staffDetails.Password),
+                    Password = BCrypt.Net.BCrypt.HashPassword(tempPassword),
                     FirstName = staffDetails.FirstName ?? string.Empty,
                     LastName = staffDetails.LastName ?? string.Empty
                 };
 
                 await _staffService.AddNewStaff(staff);
 
-                if (staffDetails.RoleList != null)
+                if (staffDetails.UserInfo.Roles != null)
                 {
-                    foreach (Role role in staffDetails.RoleList)
+
+                    foreach (RoleDto role in staffDetails.UserInfo.Roles)
                     {
+                        var userRole = await _roleService.GetRoleDetail(role.RoleCode) ?? throw new UnauthorizedAccessException($"Role '{role.RoleCode}' Not Found.");
+                        
                         var staffRoles = new StaffRoles
                         {
                             StaffUsername = staff.Username,
-                            RoleCode = role.RoleCode
+                            RoleCode = userRole.RoleCode
                         };
 
                         await _staffRolesService.AddStaffRoles(staffRoles);
                     }
                 }
+
+                Console.WriteLine(tempPassword);
             }
 
-            staffDetails.Status = Status.Success;
-            staffDetails.ResponseDetails = new ResponseDto
-            {
-                Message = "Staff Adding Success."
-            };
+            staffDetails.ResponseDetails.Status = Status.Success;
+            staffDetails.ResponseDetails.Message = "Staff Adding Success.";
+
+            
 
             return staffDetails;
         }
 
         public async Task<StaffDto> UpdateStaffDetailsAsync(StaffDto staffDetails)
         {
-            var staff = await _staffService.GetStaffDetail(staffDetails.Identifier);
+            var staff = await _staffService.GetStaffDetail(staffDetails.Username);
 
-            staff.Email = staffDetails.IsEmail ? staffDetails.Identifier : staffDetails.Email ?? string.Empty;
-            staff.Password = BCrypt.Net.BCrypt.HashPassword(staffDetails.Password);
+            staff.Email = staffDetails.UserInfo.AccountInfo.IsEmail ? staffDetails.Username : staffDetails.Email ?? string.Empty;
             staff.FirstName = staffDetails.FirstName ?? string.Empty;
             staff.LastName = staffDetails.LastName ?? string.Empty;
 
             var staffRolesList = await _staffRolesService.GetStaffRolesList(staff.Username);
-            var incomingRoleList = staffDetails.RoleList.Select(r => r.RoleCode).ToList();
+            var incomingRoleList = staffDetails.UserInfo.Roles.Select(r => r.RoleCode).ToList();
             var existingRolesList = staffRolesList.Select(r => r.RoleCode);
 
             var toRemove = staffRolesList.Where(r => !incomingRoleList.Contains(r.RoleCode)).ToList();
@@ -123,11 +131,8 @@ namespace Restaurant.System.Services.Services.Maintenance
 
             await _staffService.UpdateStaff(staff);
 
-            staffDetails.Status = Status.Success;
-            staffDetails.ResponseDetails = new ResponseDto
-            {
-                Message = "Staff Updated Success."
-            };
+            staffDetails.ResponseDetails.Status = Status.Success;
+            staffDetails.ResponseDetails.Message = "Staff Updated Success.";
 
             return staffDetails;
         }
@@ -139,9 +144,9 @@ namespace Restaurant.System.Services.Services.Maintenance
 
             var result = new StaffDto
             {
-                Status = Status.Success,
                 ResponseDetails = new ResponseDto
                 {
+                    Status = Status.Success,
                     Message = "Staff Delete Success."
                 },
             };

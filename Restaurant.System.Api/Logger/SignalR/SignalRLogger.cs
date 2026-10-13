@@ -18,8 +18,8 @@ public class SignalRLogger : ILogger
         LogLevel logLevel,
         EventId eventId,
         TState state,
-        Exception? exception,
-        Func<TState, Exception?, string> formatter)
+        Exception exception,
+        Func<TState, Exception, string> formatter)
     {
         var message = $"[{DateTime.Now:HH:mm:ss}] [{logLevel}] {formatter(state, exception)}";
 

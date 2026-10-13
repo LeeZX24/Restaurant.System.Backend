@@ -39,6 +39,21 @@ namespace Restaurant.System.Data.Repositories
             await _memberRepository.AddAsync(newMember);
             await _memberRepository.SaveChangesAsync();
         }
+
+        public async Task UpdateMember(Member Member)
+        {
+            await _memberRepository.UpdateAsync(Member);
+            await _memberRepository.SaveChangesAsync();
+        }
+
+        public async Task MemberChangePassword(Guid MemberId, string NewPassword)
+        {
+            await _memberRepository.UpdateByFieldAsync(member => 
+                member.MemberId == MemberId,
+                member => member.Password, 
+                member => NewPassword);
+            await _memberRepository.SaveChangesAsync();
+        }
     }
 }
 

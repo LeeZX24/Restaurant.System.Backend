@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using Restaurant.System.Models.Dtos.Shared.Base;
 
 namespace Restaurant.System.Models.Dtos.Requests
 {
-    public class RegisterRequest
+    public class AppRegisterRequest: BaseRequestDto
     {
-        public string Register { get; set; }
-        public string PasswordHash { get; set; }
-        // Member
-        public string CustomerNumber { get; set; }
-        public bool IsEmail { get => Register.Contains('@'); }
+        public string Identifier { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public RegistrarDto RegistrarInfo { get; set; } = new();
+        public Guid? CustomerId { get; set; }
+        public bool IsEmail { get => Identifier.Contains('@'); }
     }
 }

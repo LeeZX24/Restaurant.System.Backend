@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Restaurant.System.Models.Dtos.Shared;
+using Restaurant.System.Models.Dtos.Shared.Base;
 
 namespace Restaurant.System.Models.Dtos.Responses
 {
-    public class LoginResponse
+    public class AppLoginResponse: BaseResponseDto
     {
+        public string Token { get; set; } = string.Empty;
+        public DateTime? ExpireAt { get; set; }
+
+        public UserDto UserInfo { get; set; } = new();
     }
 }

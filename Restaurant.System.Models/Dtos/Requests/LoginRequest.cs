@@ -1,11 +1,11 @@
+using Restaurant.System.Models.Dtos.Shared.Base;
+
 namespace Restaurant.System.Models.Dtos.Requests
 {
-    public class LoginRequest
+    public class AppLoginRequest: BaseRequestDto
     {
-        public string Login { get; set; }
-        public string PasswordHash { get; set; }
-        // Member
-        public string CustomerNumber { get; set; } = string.Empty;
-        public bool IsEmail { get => Login.Contains('@'); }
+        public string Identifier { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public bool IsEmail { get => Identifier.Contains('@') == true; }
     }
 }

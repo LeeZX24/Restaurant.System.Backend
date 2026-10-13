@@ -17,7 +17,7 @@ namespace Restaurant.System.Services.Services
 
         public async Task<List<DropdownDto>> GetDropdownList()
         {
-            List<DropdownDto> dropdownList = new List<DropdownDto>();
+            List<DropdownDto> dropdownList = new();
             var dropdownDataList = await _dropdownService.GetDropdownList();
 
             foreach (Dropdown dropdownData in dropdownDataList)
@@ -39,7 +39,7 @@ namespace Restaurant.System.Services.Services
 
         public async Task<List<DropdownDto>> GetDropdownListByCategory(string category)
         {
-            List<DropdownDto> dropdownList = new List<DropdownDto>();
+            List<DropdownDto> dropdownList = new();
             var dropdownDataList = await _dropdownService.GetDropdownListByCategory(category);
 
             foreach (Dropdown dropdownData in dropdownDataList)
@@ -60,7 +60,7 @@ namespace Restaurant.System.Services.Services
 
         public async Task<List<DropdownDto>> GetDropdownListByCategoryTags(string category, string tags)
         {
-            List<DropdownDto> dropdownList = new List<DropdownDto>();
+            List<DropdownDto> dropdownList = new();
             var dropdownDataList = await _dropdownService.GetDropdownListByCategoryTag(category, tags);
 
             foreach (Dropdown dropdownData in dropdownDataList)

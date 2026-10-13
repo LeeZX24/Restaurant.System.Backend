@@ -1,9 +1,9 @@
+
 using Restaurant.System.Models.Dtos.Shared;
-using Restaurant.System.Models.Entities;
 
 namespace Restaurant.System.Models.Dtos
 {
-    public class DropdownDto : BaseDto
+    public class DropdownDto: BaseDto
     {
         public string CategoryDD { get; set; }
         public string Category { get; set; }

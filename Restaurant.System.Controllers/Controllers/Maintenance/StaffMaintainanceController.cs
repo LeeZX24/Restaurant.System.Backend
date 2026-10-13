@@ -39,13 +39,13 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<UserDto>> AddNewStaff([FromBody] StaffDto staffDetails)
+        public async Task<ActionResult<StaffDto>> AddNewStaff([FromBody] StaffDto staffDetails)
         {
             try
             {
                 var res = await _staffMaintenanceService.AddNewStaffAsync(staffDetails);
 
-                if (res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
+                if (res.ResponseDetails.IsFailed) return BadRequest(new { Message = res.ResponseDetails.Message });
 
                 return Ok(res);
             }
@@ -66,7 +66,7 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             {
                 var res = await _staffMaintenanceService.UpdateStaffDetailsAsync(staffDetails);
 
-                if (res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
+                if (res.ResponseDetails.IsFailed) return BadRequest(new { Message = res.ResponseDetails.Message });
 
                 return Ok(res);
             }
@@ -87,7 +87,7 @@ namespace Restaurant.System.Controllers.Controllers.Maintenance
             {
                 var res = await _staffMaintenanceService.DeleteStaffAsync(staffDetails.Username);
 
-                if (res.Status != Status.Success) return BadRequest(new { Message = res.ResponseDetails.Message });
+                if (res.ResponseDetails.IsFailed) return BadRequest(new { Message = res.ResponseDetails.Message });
 
                 return Ok(res);
             }

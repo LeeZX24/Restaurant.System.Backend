@@ -1,12 +1,16 @@
-using Restaurant.System.Models.Dtos.Shared;
+using Restaurant.System.Models.Dtos.Requests;
+using Restaurant.System.Models.Dtos.Responses;
 
 namespace Restaurant.System.Services.Interfaces.Auth
 {
     public interface IAuthService
     {
-        public Task<UserDto> LoginAsync(UserDto loginDetails);
-        public Task<UserDto> RegisterAsync(UserDto registerDetails);
+        public Task<AppLoginResponse> LoginAsync(AppLoginRequest loginDetails);
 
-        public Task<UserDto> LogoutAsync(UserDto logoutDetails);
+        public Task<AppRegisterResponse> RegisterAsync(AppRegisterRequest registerDetails);
+
+        public Task<AppLogoutResponse> LogoutAsync(AppLogoutRequest logoutDetails);
+
+        public Task<AppChangePasswordResponse> ChangePasswordAsync(AppChangePasswordRequest changePasswordDetails);
     }
 }
