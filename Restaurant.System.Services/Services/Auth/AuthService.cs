@@ -241,6 +241,8 @@ namespace Restaurant.System.Services.Services.Auth
         var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDetails.NewPassword);
         
         await _memberService.MemberChangePassword(member.MemberId, newPasswordHash);
+
+        response.IsPasswordChanged = true;
       }
       else
       {
@@ -251,6 +253,8 @@ namespace Restaurant.System.Services.Services.Auth
         var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordDetails.NewPassword);
         
         await _staffService.StaffChangePassword(staff.StaffId, newPasswordHash);
+
+        response.IsPasswordChanged = true;
       }
 
       response.Status = Status.Success;
