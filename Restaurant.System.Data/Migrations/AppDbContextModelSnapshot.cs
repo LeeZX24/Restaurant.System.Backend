@@ -41,7 +41,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.CustomerOrder", b =>
@@ -70,7 +70,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasIndex("OrderNumber");
 
-                    b.ToTable("CustomerOrder", (string)null);
+                    b.ToTable("CustomerOrders", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.Dropdown", b =>
@@ -107,7 +107,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Dropdown", (string)null);
+                    b.ToTable("Dropdowns", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.Member", b =>
@@ -153,7 +153,7 @@ namespace Restaurant.System.Data.Migrations
                     b.HasIndex("CustomerId")
                         .IsUnique();
 
-                    b.ToTable("Member", (string)null);
+                    b.ToTable("Members", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.Menu", b =>
@@ -199,7 +199,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MenuCategory", (string)null);
+                    b.ToTable("MenuCategories", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.MenuItem", b =>
@@ -232,7 +232,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("MenuItem", (string)null);
+                    b.ToTable("MenuItems", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.MenuSchedule", b =>
@@ -261,7 +261,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MenuSchedule", (string)null);
+                    b.ToTable("MenuSchedules", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.MenuSection", b =>
@@ -295,7 +295,99 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasIndex("ScheduleCode");
 
-                    b.ToTable("MenuSection", (string)null);
+                    b.ToTable("MenuSections", (string)null);
+                });
+
+            modelBuilder.Entity("Restaurant.System.Models.Entities.Navigation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("NavigationGuid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("NavigationOrder")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ParentItemGuid")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Route")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentItemGuid");
+
+                    b.ToTable("Navigations", (string)null);
+                });
+
+            modelBuilder.Entity("Restaurant.System.Models.Entities.NavigationRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("CanCreate")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("CanDelete")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("CanUpdate")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("CanView")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("NavigationGuid")
+                        .HasColumnType("uuid");
+
+                    b.Property<int?>("NavigationId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("RoleCode")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NavigationId");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("NavigationGuid", "RoleCode")
+                        .IsUnique();
+
+                    b.ToTable("NavigationRoles", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.Order", b =>
@@ -335,7 +427,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasIndex("StaffUsername");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.OrderGroup", b =>
@@ -362,7 +454,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasIndex("OrderNumber");
 
-                    b.ToTable("OrderGroup", (string)null);
+                    b.ToTable("OrderGroups", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.OrderItem", b =>
@@ -400,7 +492,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasIndex("OrderGroupId");
 
-                    b.ToTable("OrderItem", (string)null);
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.Payment", b =>
@@ -440,7 +532,7 @@ namespace Restaurant.System.Data.Migrations
                     b.HasIndex("OrderNumber")
                         .IsUnique();
 
-                    b.ToTable("Payment", (string)null);
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.Role", b =>
@@ -455,7 +547,6 @@ namespace Restaurant.System.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("RoleCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RoleName")
@@ -463,7 +554,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role", (string)null);
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.Staff", b =>
@@ -501,7 +592,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Staff", (string)null);
+                    b.ToTable("Staffs", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.StaffRoles", b =>
@@ -518,14 +609,23 @@ namespace Restaurant.System.Data.Migrations
                     b.Property<string>("RoleCode")
                         .HasColumnType("text");
 
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("StaffId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("StaffUsername")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleCode");
+                    b.HasIndex("RoleId");
 
-                    b.HasIndex("StaffUsername");
+                    b.HasIndex("StaffId");
+
+                    b.HasIndex("StaffUsername", "RoleCode")
+                        .IsUnique();
 
                     b.ToTable("StaffRoles", (string)null);
                 });
@@ -552,7 +652,7 @@ namespace Restaurant.System.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.CustomerOrder", b =>
@@ -561,7 +661,7 @@ namespace Restaurant.System.Data.Migrations
                         .WithMany("CustomerOrders")
                         .HasForeignKey("CustomerId")
                         .HasPrincipalKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Restaurant.System.Models.Entities.Order", "Order")
@@ -618,7 +718,7 @@ namespace Restaurant.System.Data.Migrations
 
                             b1.HasIndex("MemberId");
 
-                            b1.ToTable("Address", (string)null);
+                            b1.ToTable("Addresses", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("MemberId");
@@ -665,13 +765,39 @@ namespace Restaurant.System.Data.Migrations
                     b.Navigation("MenuSchedule");
                 });
 
+            modelBuilder.Entity("Restaurant.System.Models.Entities.Navigation", b =>
+                {
+                    b.HasOne("Restaurant.System.Models.Entities.Navigation", "ParentItem")
+                        .WithMany("ChildrenItems")
+                        .HasForeignKey("ParentItemGuid")
+                        .HasPrincipalKey("NavigationGuid")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ParentItem");
+                });
+
+            modelBuilder.Entity("Restaurant.System.Models.Entities.NavigationRole", b =>
+                {
+                    b.HasOne("Restaurant.System.Models.Entities.Navigation", "Navigation")
+                        .WithMany("NavigationRoleList")
+                        .HasForeignKey("NavigationId");
+
+                    b.HasOne("Restaurant.System.Models.Entities.Role", "Role")
+                        .WithMany("NavigationRolesList")
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("Navigation");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("Restaurant.System.Models.Entities.Order", b =>
                 {
                     b.HasOne("Restaurant.System.Models.Entities.Staff", "Staff")
                         .WithMany("OrderHistory")
                         .HasForeignKey("StaffUsername")
                         .HasPrincipalKey("Username")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.OwnsOne("Restaurant.System.Models.Entities.OrderAddress", "DeliveryAddress", b1 =>
                         {
@@ -705,7 +831,7 @@ namespace Restaurant.System.Data.Migrations
                             b1.HasIndex("OrderId")
                                 .IsUnique();
 
-                            b1.ToTable("OrderAddress", (string)null);
+                            b1.ToTable("OrderAddresses", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
@@ -760,15 +886,11 @@ namespace Restaurant.System.Data.Migrations
                 {
                     b.HasOne("Restaurant.System.Models.Entities.Role", "Role")
                         .WithMany("StaffRolesList")
-                        .HasForeignKey("RoleCode")
-                        .HasPrincipalKey("RoleCode")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RoleId");
 
                     b.HasOne("Restaurant.System.Models.Entities.Staff", "Staff")
                         .WithMany("StaffRolesList")
-                        .HasForeignKey("StaffUsername")
-                        .HasPrincipalKey("Username")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("StaffId");
 
                     b.Navigation("Role");
 
@@ -799,6 +921,13 @@ namespace Restaurant.System.Data.Migrations
                     b.Navigation("MenuSectionList");
                 });
 
+            modelBuilder.Entity("Restaurant.System.Models.Entities.Navigation", b =>
+                {
+                    b.Navigation("ChildrenItems");
+
+                    b.Navigation("NavigationRoleList");
+                });
+
             modelBuilder.Entity("Restaurant.System.Models.Entities.Order", b =>
                 {
                     b.Navigation("CustomerOrders");
@@ -815,6 +944,8 @@ namespace Restaurant.System.Data.Migrations
 
             modelBuilder.Entity("Restaurant.System.Models.Entities.Role", b =>
                 {
+                    b.Navigation("NavigationRolesList");
+
                     b.Navigation("StaffRolesList");
                 });
 

@@ -7,6 +7,7 @@ namespace Restaurant.System.Models.Entities
         public string RoleName { get; set; }
         // public string Level { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public List<StaffRoles> StaffRolesList { get; set; } // Foreign Key
+        public List<StaffRoles> StaffRolesList { get; set; } = []; // Foreign Key
+        public List<NavigationRole> NavigationRolesList { get; set; } = []; // Foreign Key
     }
 }

@@ -9,7 +9,7 @@ namespace Restaurant.System.Models.Entities
         public required string OrderNumber { get; set; }
         public required string GroupName { get; set; }
         public required DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-        public List<OrderItem> OrderItemList { get; set; } // Foreign Key
+        public List<OrderItem> OrderItemList { get; set; } = []; // Foreign Key
         public Order Order { get; set; } // Foreign Key
     }
 }

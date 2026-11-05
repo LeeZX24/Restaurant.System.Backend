@@ -18,6 +18,7 @@ namespace Restaurant.System.Data
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<StaffRoles> StaffRoles => Set<StaffRoles>();
         public DbSet<User> Users => Set<User>();
+        public DbSet<Address> Addresses => Set<Address>();
 
         // Menu
         public DbSet<Menu> Menus => Set<Menu>();
@@ -31,12 +32,15 @@ namespace Restaurant.System.Data
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
         public DbSet<CustomerOrder> CustomerOrders => Set<CustomerOrder>();
         public DbSet<OrderGroup> OrderGroups => Set<OrderGroup>();
+        public DbSet<OrderAddress> OrderAddresses => Set<OrderAddress>();
 
         //Payment
         public DbSet<Payment> Payments => Set<Payment>();
 
         //System Related
         public DbSet<Dropdown> Dropdowns => Set<Dropdown>();
+        public DbSet<Navigation> Navigations => Set<Navigation>();
+        public DbSet<NavigationRole> NavigationRoles => Set<NavigationRole>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -53,7 +57,7 @@ namespace Restaurant.System.Data
             
             // Menu
             builder.Entity<MenuItem>().ToTable("MenuItems");
-            builder.Entity<MenuCategory>().ToTable("MenuCategorys");
+            builder.Entity<MenuCategory>().ToTable("MenuCategories");
             builder.Entity<MenuSchedule>().ToTable("MenuSchedules");
             builder.Entity<Menu>().ToTable("Menu");
 
@@ -70,6 +74,8 @@ namespace Restaurant.System.Data
             
             // System Related
             builder.Entity<Dropdown>().ToTable("Dropdowns");
+            builder.Entity<Navigation>().ToTable("Navigations");
+            builder.Entity<NavigationRole>().ToTable("NavigationRoles");
             #endregion
 
             #region Member
@@ -83,26 +89,22 @@ namespace Restaurant.System.Data
             builder.Entity<Member>()
                 .OwnsMany(m => m.AddressList, a =>
                 {
-                    a.ToTable("Address");
+                    a.ToTable("Addresses");
                     a.WithOwner().HasForeignKey("MemberId");
                     a.HasKey(x => x.AddressGuid);
                 });
             #endregion
 
             #region Staff
-            builder.Entity<Staff>()
-                .HasMany(s => s.StaffRolesList)
-                .WithOne(sr => sr.Staff)
-                .HasForeignKey(sr => sr.StaffUsername)
-                .HasPrincipalKey(s => s.Username)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<StaffRoles>()
+                .HasKey(sr => sr.Id);
 
-            builder.Entity<Role>()
-                .HasMany(r => r.StaffRolesList)
-                .WithOne(sr => sr.Role)
-                .HasForeignKey(sr => sr.RoleCode)
-                .HasPrincipalKey(s => s.RoleCode)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<StaffRoles>()
+                .HasIndex(sr => new {
+                    sr.StaffUsername,
+                    sr.RoleCode
+                })
+                .IsUnique();
             #endregion
 
             #region Order
@@ -132,13 +134,14 @@ namespace Restaurant.System.Data
                 .WithOne(co => co.Customer)
                 .HasForeignKey(co => co.CustomerId)
                 .HasPrincipalKey(c => c.CustomerId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Order>()
                 .HasOne(o => o.Payment)
                 .WithOne(p => p.Order)
                 .HasForeignKey<Payment>(p => p.OrderNumber)
                 .HasPrincipalKey<Order>(o => o.OrderNumber)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Order>()
@@ -146,15 +149,18 @@ namespace Restaurant.System.Data
                 .WithMany(s => s.OrderHistory)
                 .HasForeignKey(o => o.StaffUsername)
                 .HasPrincipalKey(s => s.Username)
-                .OnDelete(DeleteBehavior.Cascade);
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
             
             builder.Entity<Order>()
                 .OwnsOne(o => o.DeliveryAddress, a =>
                 {
-                    a.ToTable("OrderAddress");
+                    a.ToTable("OrderAddresses");
                     a.WithOwner().HasForeignKey("OrderId");
                     a.HasKey(x => x.AddressGuid);
-                });
+                })
+                .Navigation(o => o.DeliveryAddress)
+                .IsRequired(false);
             #endregion
 
             #region Menu
@@ -178,6 +184,27 @@ namespace Restaurant.System.Data
                 .HasForeignKey(ms => ms.ScheduleCode)
                 .HasPrincipalKey(s => s.ScheduleCode)
                 .OnDelete(DeleteBehavior.Cascade);
+            #endregion
+
+            #region Navigation
+            //Parent Children
+            builder.Entity<Navigation>()
+                .HasOne(np => np.ParentItem)
+                .WithMany(nc => nc.ChildrenItems)
+                .HasForeignKey(np => np.ParentItemGuid)
+                .HasPrincipalKey(n => n.NavigationGuid)
+                .OnDelete(DeleteBehavior.Restrict);
+                
+            builder.Entity<NavigationRole>()
+                .HasKey(nr => nr.Id);
+
+            builder.Entity<NavigationRole>()     
+                .HasIndex(nr => new 
+                {
+                    nr.NavigationGuid,
+                    nr.RoleCode
+                })
+                .IsUnique();
             #endregion
         }
     }
