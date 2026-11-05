@@ -12,7 +12,7 @@ namespace Restaurant.System.Models.Entities
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public decimal MemberPoint { get; set; }
-        public List<Address> AddressList { get; set; } // Foreign Key
+        public List<Address> AddressList { get; set; } = []; // Foreign Key
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public string FullName { get => $"{FirstName ?? string.Empty} {LastName ?? string.Empty}".Trim(); }
         public Customer Customer { get; set; } // Foreign Key

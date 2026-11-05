@@ -7,6 +7,6 @@ namespace Restaurant.System.Models.Entities
         public bool IsAnonymous { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Member MemberDetails { get; set; } // Foreign Key, nullable if is not anonymous
-        public List<CustomerOrder> CustomerOrders { get; set; } // Foreign Key
+        public List<CustomerOrder> CustomerOrders { get; set; } = []; // Foreign Key
     }
 }
